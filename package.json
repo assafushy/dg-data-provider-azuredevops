@@ -1,8 +1,8 @@
 {
-  "name": "azuredevops-api",
-  "version": "2.0.71",
-  "description": "TODO: Give a short introduction of your project. Let this section explain the objectives or the motivation behind this project.",
-  "private": true,
+  "name": "dg-data-provider-azuredevops",
+  "version": "0.0.1",
+  "description": "A document generator data provider, aimed to retrive data from azure devops",
+  "private": false,
   "main": "./bin/src/index.js",
   "types": "./bin/src/index.d.ts",
   "scripts": {
