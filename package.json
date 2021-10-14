@@ -1,7 +1,11 @@
 {
-  "name": "dg-data-provider-azuredevops",
+  "name": "@doc-gen/dg-data-provider-azuredevops",
   "version": "0.0.1",
   "description": "A document generator data provider, aimed to retrive data from azure devops",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/assafushy/dg-data-provider-azuredevops.git"
+  },
   "private": false,
   "main": "./bin/src/index.js",
   "types": "./bin/src/index.d.ts",
