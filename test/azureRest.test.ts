@@ -4,8 +4,11 @@ import { Console } from "winston/lib/winston/transports";
 import AzureRestApi from "../src";
 import { writeFileSync } from "fs";
 
-const orgUrl = "<org-url> //!!chaanged";
-const token = "<pat> //!!chaanged"; //doc-gebn-test-token
+require("dotenv").config();
+
+const orgUrl = process.env.ORG_URL;
+const token = process.env.PAT;
+
 const wiql =
   "SELECT [System.Id],[System.WorkItemType],[System.Title],[System.AssignedTo],[System.State],[System.Tags] FROM workitems WHERE [System.TeamProject]=@project";
 
@@ -160,8 +163,7 @@ describe("Test module - tests", () => {
   });
   test("should return list of test cases - stress test - big testplan 1400 cases", async () => {
     jest.setTimeout(1000000);
-    const orgUrl = "<org-url> //!!chaanged;
-    const token = "6pxdmymhuk4a67cbp6phuhwh6kczps5rhmacb23i33sib333ln2a";
+
     let restApi = new AzureRestApi(orgUrl, token);
     let attachList: any = await restApi.GetTestCasesBySuites(
       "Tactical-C4I",
