@@ -9,15 +9,23 @@ import { value } from "./models/tfs-data";
 import { TestCase } from "./models/tfs-data";
 import * as xml2js from "xml2js";
 
+import GitDataProvider from "./modules/GitDataProvider";
+
 import logger from "./utils/logger";
 
-export default class AzureRestApi {
-  orgUrl = "";
-  token = "";
+export default class DgDataProviderAzureDevOps {
+  orgUrl: string = "";
+  token: string = "";
+  apiVersion: string;
   queriesList: Array<any> = new Array<any>();
 
-  constructor(orgUrl: string, token: string) {
+  constructor(orgUrl: string, token: string, apiVersion?: string) {
     this.orgUrl = orgUrl;
     this.token = token;
+    this.apiVersion = apiVersion || "5.1";
+  }
+
+  getGitDataProvider() {
+    return new GitDataProvider(this.orgUrl, this.token, this.apiVersion);
   }
 } //class

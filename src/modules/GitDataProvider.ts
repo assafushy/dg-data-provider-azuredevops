@@ -1,11 +1,19 @@
+import { TFSServices } from "../helpers/tfs";
+import logger from "../utils/logger";
 export default class GitDataProvider {
   orgUrl: string = "";
   token: string = "";
 
-  constructor(orgUrl: string, token: string) {
+  constructor(orgUrl: string, token: string, apiVersion: string) {
     this.orgUrl = orgUrl;
     this.token = token;
   }
+
+  async GetGitRepoFromRepoId(repoId: string) {
+    logger.debug(`fetching repo data by id - ${repoId}`);
+    let url = `${this.orgUrl}_apis/git/repositories/${repoId}?api-version=5.0`;
+    return TFSServices.getItemContent(url, this.token, "get");
+  } //GetGitRepoFromPrId
 
   async GetJsonFileFromGitRepo(
     projectName: string,
@@ -17,12 +25,6 @@ export default class GitDataProvider {
     let jsonObject = JSON.parse(res.content);
     return jsonObject;
   } //GetJsonFileFromGitRepo
-
-  async GetGitRepoFromRepoId(repoId: string) {
-    let url = `${this.orgUrl}_apis/git/repositories/${repoId}?api-version=5.0`;
-    let res = await TFSServices.getItemContent(url, this.token, "get");
-    return res;
-  } //GetGitRepoFromPrId
 
   async GetGitRepoFromPrId(pullRequestId: number) {
     let url = `${this.orgUrl}_apis/git/pullrequests/${pullRequestId}?api-version=5.0`;
