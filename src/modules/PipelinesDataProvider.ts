@@ -1,10 +1,16 @@
-class PipelinesDataProvider {
+import { TFSServices } from "../helpers/tfs";
+
+import logger from "../utils/logger";
+
+export default class PipelinesDataProvider {
   orgUrl: string = "";
   token: string = "";
-
-  constructor(orgUrl: string, token: string) {
+  apiVersion: string ="";
+  
+  constructor(orgUrl: string, token: string, apiVersion: string) {
     this.orgUrl = orgUrl;
     this.token = token;
+    this.apiVersion = apiVersion;
   }
 
   async TriggerBuildById(

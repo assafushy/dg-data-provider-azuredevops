@@ -1,6 +1,4 @@
-import { Workitem } from "../../models/tfs-data";
 import logger from "utils/logger";
-import { Console } from "winston/lib/winston/transports";
 import AzureRestApi from "../..";
 import { writeFileSync } from "fs";
 
@@ -14,23 +12,21 @@ const wiql =
 
 describe("git module - tests", () => {
   test("should return repo from repoid", async () => {
-    const orgUrl = "<org-url> //!!chaanged";
-    const token = "<pat-url> //!!chaanged";
     let restApi = new AzureRestApi(orgUrl, token);
-    let json: any = await restApi.GetGitRepoFromRepoId(
+    let json: any = await restApi.getGitDataProvider().GetGitRepoFromRepoId(
       "95c0c5dd-fefd-411e-bb6b-850e7ce7732a"
     );
     expect(json).toBeDefined();
   });
   test("should return doc-gen-test - repo by pullrequest id", async () => {
     let restApi = new AzureRestApi(orgUrl, token);
-    let json: any = await restApi.GetGitRepoFromPrId(71);
+    let json: any = await restApi.getGitDataProvider().GetGitRepoFromPrId(71);
     expect(json.repository).toBeDefined();
   });
   test("should return doc-gen-test - commits by pullrequest & repo id", async () => {
     let restApi = new AzureRestApi(orgUrl, token);
-    let json: any = await restApi.GetGitRepoFromPrId(71);
-    let commitJson: any = await restApi.GetPullRequestCommits(
+    let json: any = await restApi.getGitDataProvider().GetGitRepoFromPrId(71);
+    let commitJson: any = await restApi.getGitDataProvider().GetPullRequestCommits(
       json.repository.id,
       71
     );
@@ -38,7 +34,7 @@ describe("git module - tests", () => {
   });
   test("should return pullrequest threads", async () => {
     let restApi = new AzureRestApi(orgUrl, token);
-    let json = await restApi.GetPullRequestComments(
+    let json = await restApi.getGitDataProvider().GetPullRequestComments(
       "DevOps",
       "d3e3c3a9-ed5f-41e3-8885-8c5d8a672d33",
       72
@@ -77,7 +73,7 @@ describe("git module - tests", () => {
       },
     };
     let restApi = new AzureRestApi(orgUrl, token);
-    let json = await restApi.CreatePullRequestComment(
+    let json = await restApi.getGitDataProvider().CreatePullRequestComment(
       "DevOps",
       "d3e3c3a9-ed5f-41e3-8885-8c5d8a672d33",
       72,
@@ -87,10 +83,8 @@ describe("git module - tests", () => {
   });
   test("should return commits with linked items in sha raneg", async () => {
     jest.setTimeout(1000000);
-    const orgUrl = "<org-url> //!!chaanged";
-    const token = "<pat-url> //!!chaanged";
     let restApi = new AzureRestApi(orgUrl, token);
-    let json = await restApi.GetItemsInCommitRange(
+    let json = await restApi.getGitDataProvider().GetItemsInCommitRange(
       "DevOps",
       "95c0c5dd-fefd-411e-bb6b-850e7ce7732a",
       "8c28d91d34674512c20d13e06cd1c5bf8b67d5e5",
@@ -100,26 +94,20 @@ describe("git module - tests", () => {
   });
   test("should return source trigger commit for pipline", async () => {
     jest.setTimeout(1000000);
-    const orgUrl = "<org-url> //!!chaanged";
-    const token = "<pat-url> //!!chaanged";
     let restApi = new AzureRestApi(orgUrl, token);
-    let json = await restApi.GetCommitForPipeline("DevOps", 18732);
+    let json = await restApi.getGitDataProvider().GetCommitForPipeline("DevOps", 18732);
     expect(json).toBe("006faa1556e6788eea691fe922736b653818dba7");
   });
   test.skip("should return items linked in build range", async () => {
     jest.setTimeout(1000000);
-    const orgUrl = "<org-url> //!!chaanged";
-    const token = "<pat-url> //!!chaanged";
     let restApi = new AzureRestApi(orgUrl, token);
-    let json = await restApi.GetItemsForPipelinesRange("DevOps", 18492, 18885);
+    let json = await restApi.getGitDataProvider().GetItemsForPipelinesRange("DevOps", 18492, 18885);
     expect(json.length).toBe(3);
   });
   test("should return commits range between dates ", async () => {
     jest.setTimeout(1000000);
-    const orgUrl = "<org-url> //!!chaanged";
-    const token = "<pat-url> //!!chaanged";
     let restApi = new AzureRestApi(orgUrl, token);
-    let json = await restApi.GetCommitsInDateRange(
+    let json = await restApi.getGitDataProvider().GetCommitsInDateRange(
       "DevOps",
       "95c0c5dd-fefd-411e-bb6b-850e7ce7732a",
       "2021-01-30T12:51:51Z",

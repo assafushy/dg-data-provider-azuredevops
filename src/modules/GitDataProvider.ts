@@ -1,12 +1,18 @@
 import { TFSServices } from "../helpers/tfs";
+import TicketsDataProvider from './TicketsDataProvider'
 import logger from "../utils/logger";
 export default class GitDataProvider {
   orgUrl: string = "";
   token: string = "";
-
+  apiVersion: string ="";
+  ticketsDataProvider :TicketsDataProvider ;
+                
   constructor(orgUrl: string, token: string, apiVersion: string) {
     this.orgUrl = orgUrl;
     this.token = token;
+    this.apiVersion = apiVersion;
+    this.ticketsDataProvider = new TicketsDataProvider(this.orgUrl,this.token,this.apiVersion)
+  
   }
 
   async GetGitRepoFromRepoId(repoId: string) {
@@ -85,7 +91,7 @@ export default class GitDataProvider {
             );
             await Promise.all(
               linkedItems.value.map(async (item: any) => {
-                let populatedItem = await this.GetWorkItem(projectId, item.id);
+                let populatedItem = await this.ticketsDataProvider.GetWorkItem(projectId, item.id);
                 let changeSet: any = {
                   workItem: populatedItem,
                   pullrequest: pr,
@@ -135,7 +141,7 @@ export default class GitDataProvider {
         if (commit.workItems) {
           Promise.all(
             commit.workItems.map(async (wi: any) => {
-              let populatedItem = await this.GetWorkItem(projectId, wi.id);
+              let populatedItem = await this.ticketsDataProvider.GetWorkItem(projectId, wi.id);
               let changeSet: any = { workItem: populatedItem, commit: commit };
               commitChangesArray.push(changeSet);
             })
@@ -184,7 +190,7 @@ export default class GitDataProvider {
     );
     await Promise.all(
       res.value.map(async (wi: any) => {
-        let populatedItem = await this.GetWorkItem(projectId, wi.id);
+        let populatedItem = await this.ticketsDataProvider.GetWorkItem(projectId, wi.id);
         let changeSet: any = { workItem: populatedItem, build: toBuildId };
         linkedItemsArray.push(changeSet);
       })

@@ -1,11 +1,28 @@
-class TicketsDataProvider {
+import { TFSServices } from "../helpers/tfs";
+import { Workitem } from "../models/tfs-data";
+import { Helper, suiteData, Links, Trace, Relations } from "../helpers/helper";
+import { Query, TestSteps } from "../models/tfs-data";
+import { QueryType } from "../models/tfs-data";
+import { QueryAllTypes } from "../models/tfs-data";
+import { Column } from "../models/tfs-data";
+import { value } from "../models/tfs-data";
+import { TestCase } from "../models/tfs-data";
+import * as xml2js from "xml2js";
+
+import logger from "../utils/logger";
+
+export default class TicketsDataProvider {
   orgUrl: string = "";
   token: string = "";
+  apiVersion: string ="";
+  queriesList: Array<any> = new Array<any>();
 
-  constructor(orgUrl: string, token: string) {
+  constructor(orgUrl: string, token: string, apiVersion: string) {
     this.orgUrl = orgUrl;
     this.token = token;
+    this.apiVersion = apiVersion;
   }
+
 
   async GetWorkItem(project: string, id: string): Promise<any> {
     let wiuRL =
@@ -220,7 +237,7 @@ class TicketsDataProvider {
     return res;
   }
   async GetModeledQueryResults(results: any, project: string) {
-    let restApi = new AzureRestApi(this.orgUrl, this.token);
+    let ticketsDataProvider = new TicketsDataProvider(this.orgUrl, this.token,this.apiVersion);
     var queryResult: Query = new Query();
     queryResult.asOf = results.asOf;
     queryResult.queryResultType = results.queryResultType;
@@ -231,7 +248,7 @@ class TicketsDataProvider {
       //TODO:check if wi.relations exist
       //TODO: add attachment to any list from 1
       for (var j = 0; j < results.workItems.length; j++) {
-        let wi = await restApi.GetWorkItem(project, results.workItems[j].id);
+        let wi = await ticketsDataProvider.GetWorkItem(project, results.workItems[j].id);
 
         queryResult.workItems[j] = new Workitem();
         queryResult.workItems[j].url = results.workItems[j].url;
@@ -270,7 +287,7 @@ class TicketsDataProvider {
       this.BuildColumns(results, queryResult);
       for (var j = 0; j < results.workItemRelations.length; j++) {
         if (results.workItemRelations[j].target != null) {
-          let wiT = await restApi.GetWorkItem(
+          let wiT = await ticketsDataProvider.GetWorkItem(
             project,
             results.workItemRelations[j].target.id
           );
@@ -352,9 +369,9 @@ class TicketsDataProvider {
 
   async GetWorkitemAttachments(project: string, id: string) {
     let attachmentList: Array<string> = [];
-    let restApi = new AzureRestApi(this.orgUrl, this.token);
+    let ticketsDataProvider = new TicketsDataProvider(this.orgUrl, this.token,this.apiVersion);
     try {
-      let wi = await restApi.GetWorkItem(project, id);
+      let wi = await ticketsDataProvider.GetWorkItem(project, id);
       if (!wi.relations) return [];
       await Promise.all(
         wi.relations.map(async (relation: any) => {

@@ -1,10 +1,15 @@
-class MangementDataProvider {
+import { TFSServices } from "../helpers/tfs";
+import logger from "../utils/logger";
+
+export default class MangementDataProvider {
   orgUrl: string = "";
   token: string = "";
-
-  constructor(orgUrl: string, token: string) {
+  apiVersion: string ="";
+  
+  constructor(orgUrl: string, token: string, apiVersion: string) {
     this.orgUrl = orgUrl;
     this.token = token;
+    this.apiVersion = apiVersion;
   }
 
   async GetCllectionLinkTypes() {
@@ -19,7 +24,7 @@ class MangementDataProvider {
     return res;
   }
 
-  //get all projects s
+  //get all projects 
   async GetProjects(): Promise<any> {
     let projectUrl: string = this.orgUrl + "_apis/projects?api-version=5.1";
     let projects: any = await TFSServices.getItemContent(
