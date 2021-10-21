@@ -14,6 +14,12 @@ export default class GitDataProvider {
     this.ticketsDataProvider = new TicketsDataProvider(this.orgUrl,this.token,this.apiVersion)
   
   }
+  async GetTeamProjectGitReposList(teamProject: string) {
+    logger.debug(`fetching repos list for team project - ${teamProject}`);
+    let url = `${this.orgUrl}/${teamProject}/_apis/git/repositories?api-version=5.0`;
+    return TFSServices.getItemContent(url, this.token, "get");
+  } //GetGitRepoFromPrId
+
 
   async GetGitRepoFromRepoId(repoId: string) {
     logger.debug(`fetching repo data by id - ${repoId}`);
