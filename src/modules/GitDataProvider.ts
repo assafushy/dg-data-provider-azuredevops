@@ -204,10 +204,6 @@ export default class GitDataProvider {
     return linkedItemsArray;
   } //GetCommitForPipeline
 
-  async GetPipelineFromPipelineId(projectId: string, buildId: number) {
-    let url = `${this.orgUrl}${projectId}/_apis/build/builds/${buildId}?api-version=5.0`;
-    return TFSServices.getItemContent(url, this.token, "get");
-  } //GetCommitForPipeline
 
   async GetCommitsInDateRange(
     projectId: string,

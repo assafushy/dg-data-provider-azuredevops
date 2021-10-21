@@ -1,21 +1,21 @@
-import { Workitem } from "../../models/tfs-data";
-import logger from "utils/logger";
-import { Console } from "winston/lib/winston/transports";
-import AzureRestApi from "../..";
-import { writeFileSync } from "fs";
+import logger from "../../utils/logger";
+import DgDataProviderAzureDevOps from "../..";
 
 require("dotenv").config();
+jest.setTimeout(10000);
 
 const orgUrl = process.env.ORG_URL;
 const token = process.env.PAT;
 
-describe("buidl related tests", () => {
-  // test("should returnbuild info", async () => {
-  //   jest.setTimeout(1000000);
-  //   const orgUrl = "<org-url> //!!chaanged";
-  //   const token = "<pat-url> //!!chaanged";
-  //   let restApi = new AzureRestApi(orgUrl, token);
-  //   let json = await restApi.GetPipelineFromPipelineId("DevOps", 19072);
-  //   expect(json.id).toBe(19072);
-  // });
+describe("pipeline related tests", () => {
+  test("should return pipeline info", async () => {
+    let dgDataProviderAzureDevOps = new DgDataProviderAzureDevOps(orgUrl, token);
+    let json = await dgDataProviderAzureDevOps.getPipelinesDataProvider().getPipelineFromPipelineId("tests", 244);
+    expect(json.id).toBe(244);
+  });
+  test("should return Release definition", async () => {
+    let dgDataProviderAzureDevOps = new DgDataProviderAzureDevOps(orgUrl, token);
+    let json: any = await dgDataProviderAzureDevOps.getPipelinesDataProvider().GetReleaseByReleaseId("tests",1);
+    expect(json).toBeDefined();
+  });
 });

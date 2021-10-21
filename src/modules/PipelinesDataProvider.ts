@@ -13,6 +13,11 @@ export default class PipelinesDataProvider {
     this.apiVersion = apiVersion;
   }
 
+  async getPipelineFromPipelineId(projectId: string, buildId: number) {
+    let url = `${this.orgUrl}${projectId}/_apis/build/builds/${buildId}?api-version=5.0`;
+    return TFSServices.getItemContent(url, this.token, "get");
+  } //GetCommitForPipeline
+
   async TriggerBuildById(
     project: string,
     buildDefanitionId: string,
@@ -92,6 +97,7 @@ export default class PipelinesDataProvider {
     releaseId: number
   ): Promise<any> {
     let url = `${this.orgUrl}${projectName}/_apis/release/releases/${releaseId}?api-version=5.0`;
+    url = url.replace("dev.azure.com","vsrm.dev.azure.com")
     let res = await TFSServices.getItemContent(
       url,
       this.token,
