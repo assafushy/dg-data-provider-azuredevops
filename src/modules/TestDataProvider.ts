@@ -271,7 +271,7 @@ export default class TestDataProvider {
       return res;
     } catch (err) {
       logger.error(`Error : ${err}`);
-      throw new Error(err);
+      throw new Error(String(err));
     }
   }
 

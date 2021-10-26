@@ -88,7 +88,7 @@ export default class PipelinesDataProvider {
       return result;
     } catch (err) {
       logger.error(`Error : ${err}`);
-      throw new Error(err);
+      throw new Error(String(err));
     }
   }
 

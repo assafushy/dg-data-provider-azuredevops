@@ -27,7 +27,7 @@ export class TFSServices {
       return res;
     } catch (e) {
       logger.error(`error download zip file , url : ${url}`);
-      throw new Error(e);
+      throw new Error(String(e));
     }
   }
 

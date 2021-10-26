@@ -19,19 +19,19 @@ export default class DgDataProviderAzureDevOps {
     logger.info(`azure devops data provider initilized`);
   }
 
-  async getMangementDataProvider() {
+  async getMangementDataProvider() : Promise<MangementDataProvider> {
     return new MangementDataProvider(this.orgUrl, this.token, this.apiVersion);
   }
-  async getTicketsDataProvider() {
+  async getTicketsDataProvider() : Promise<TicketsDataProvider> {
     return new TicketsDataProvider(this.orgUrl, this.token, this.apiVersion);
   }
-  async getGitDataProvider() {
+  async getGitDataProvider() : Promise<GitDataProvider> {
     return new GitDataProvider(this.orgUrl, this.token, this.apiVersion);
   }
-  async getPipelinesDataProvider() {
+  async getPipelinesDataProvider() : Promise<PipelinesDataProvider> {
     return new PipelinesDataProvider(this.orgUrl, this.token, this.apiVersion);
   }
-  async getTestDataProvider() {
+  async getTestDataProvider() : Promise<TestDataProvider> {
     return new TestDataProvider(this.orgUrl, this.token, this.apiVersion);
   }
 } //class

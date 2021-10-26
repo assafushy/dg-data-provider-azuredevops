@@ -10,12 +10,14 @@ const token = process.env.PAT;
 describe("pipeline related tests", () => {
   test("should return pipeline info", async () => {
     let dgDataProviderAzureDevOps = new DgDataProviderAzureDevOps(orgUrl, token);
-    let json = await dgDataProviderAzureDevOps.getPipelinesDataProvider().getPipelineFromPipelineId("tests", 244);
+    let pipelinesDataProvider = await dgDataProviderAzureDevOps.getPipelinesDataProvider()
+    let json = await pipelinesDataProvider.getPipelineFromPipelineId("tests", 244);
     expect(json.id).toBe(244);
   });
   test("should return Release definition", async () => {
     let dgDataProviderAzureDevOps = new DgDataProviderAzureDevOps(orgUrl, token);
-    let json: any = await dgDataProviderAzureDevOps.getPipelinesDataProvider().GetReleaseByReleaseId("tests",1);
+    let pipelinesDataProvider = await dgDataProviderAzureDevOps.getPipelinesDataProvider()
+    let json: any = await pipelinesDataProvider.GetReleaseByReleaseId("tests",1);
     expect(json).toBeDefined();
   });
 });
