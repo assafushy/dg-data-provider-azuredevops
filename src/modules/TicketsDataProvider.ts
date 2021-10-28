@@ -14,7 +14,7 @@ import logger from "../utils/logger";
 export default class TicketsDataProvider {
   orgUrl: string = "";
   token: string = "";
-  apiVersion: string ="";
+  apiVersion: string = "";
   queriesList: Array<any> = new Array<any>();
 
   constructor(orgUrl: string, token: string, apiVersion: string) {
@@ -23,12 +23,9 @@ export default class TicketsDataProvider {
     this.apiVersion = apiVersion;
   }
 
-
   async GetWorkItem(project: string, id: string): Promise<any> {
-    let wiuRL =
-      this.orgUrl + project + "/_apis/wit/workitems/" + id + "?$expand=All";
-    let wi = await TFSServices.getItemContent(wiuRL, this.token);
-    return wi;
+    let url = `${this.orgUrl}${project}/_apis/wit/workitems/${id}?$expand=All`;
+    return TFSServices.getItemContent(url, this.token);
   }
   async GetLinksByIds(project: string, ids: any) {
     var trace: Array<Trace> = new Array<Trace>();
@@ -237,7 +234,11 @@ export default class TicketsDataProvider {
     return res;
   }
   async GetModeledQueryResults(results: any, project: string) {
-    let ticketsDataProvider = new TicketsDataProvider(this.orgUrl, this.token,this.apiVersion);
+    let ticketsDataProvider = new TicketsDataProvider(
+      this.orgUrl,
+      this.token,
+      this.apiVersion
+    );
     var queryResult: Query = new Query();
     queryResult.asOf = results.asOf;
     queryResult.queryResultType = results.queryResultType;
@@ -248,7 +249,10 @@ export default class TicketsDataProvider {
       //TODO:check if wi.relations exist
       //TODO: add attachment to any list from 1
       for (var j = 0; j < results.workItems.length; j++) {
-        let wi = await ticketsDataProvider.GetWorkItem(project, results.workItems[j].id);
+        let wi = await ticketsDataProvider.GetWorkItem(
+          project,
+          results.workItems[j].id
+        );
 
         queryResult.workItems[j] = new Workitem();
         queryResult.workItems[j].url = results.workItems[j].url;
@@ -369,7 +373,11 @@ export default class TicketsDataProvider {
 
   async GetWorkitemAttachments(project: string, id: string) {
     let attachmentList: Array<string> = [];
-    let ticketsDataProvider = new TicketsDataProvider(this.orgUrl, this.token,this.apiVersion);
+    let ticketsDataProvider = new TicketsDataProvider(
+      this.orgUrl,
+      this.token,
+      this.apiVersion
+    );
     try {
       let wi = await ticketsDataProvider.GetWorkItem(project, id);
       if (!wi.relations) return [];

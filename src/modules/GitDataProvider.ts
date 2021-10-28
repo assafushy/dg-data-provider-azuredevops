@@ -1,25 +1,27 @@
 import { TFSServices } from "../helpers/tfs";
-import TicketsDataProvider from './TicketsDataProvider'
+import TicketsDataProvider from "./TicketsDataProvider";
 import logger from "../utils/logger";
 export default class GitDataProvider {
   orgUrl: string = "";
   token: string = "";
-  apiVersion: string ="";
-  ticketsDataProvider :TicketsDataProvider ;
-                
+  apiVersion: string = "";
+  ticketsDataProvider: TicketsDataProvider;
+
   constructor(orgUrl: string, token: string, apiVersion: string) {
     this.orgUrl = orgUrl;
     this.token = token;
     this.apiVersion = apiVersion;
-    this.ticketsDataProvider = new TicketsDataProvider(this.orgUrl,this.token,this.apiVersion)
-  
+    this.ticketsDataProvider = new TicketsDataProvider(
+      this.orgUrl,
+      this.token,
+      this.apiVersion
+    );
   }
   async GetTeamProjectGitReposList(teamProject: string) {
     logger.debug(`fetching repos list for team project - ${teamProject}`);
     let url = `${this.orgUrl}/${teamProject}/_apis/git/repositories?api-version=5.0`;
     return TFSServices.getItemContent(url, this.token, "get");
   } //GetGitRepoFromPrId
-
 
   async GetGitRepoFromRepoId(repoId: string) {
     logger.debug(`fetching repo data by id - ${repoId}`);
@@ -97,7 +99,10 @@ export default class GitDataProvider {
             );
             await Promise.all(
               linkedItems.value.map(async (item: any) => {
-                let populatedItem = await this.ticketsDataProvider.GetWorkItem(projectId, item.id);
+                let populatedItem = await this.ticketsDataProvider.GetWorkItem(
+                  projectId,
+                  item.id
+                );
                 let changeSet: any = {
                   workItem: populatedItem,
                   pullrequest: pr,
@@ -120,41 +125,29 @@ export default class GitDataProvider {
     fromCommitSha: string,
     toCommitSha: string
   ) {
-    //get date for each commit
-    let fromCommit = await this.GetCommitByCommitId(
+    //get commits in commit range
+    let commitRange = await this.GetCommitsInCommitRange(
       projectId,
       repositoryId,
+      toCommitSha,
       fromCommitSha
-    );
-    let toCommit = await this.GetCommitByCommitId(
-      projectId,
-      repositoryId,
-      toCommitSha
-    );
-    //get commits in date range
-    let commitRange = await this.GetCommitsInDateRange(
-      projectId,
-      repositoryId,
-      fromCommit.push.date,
-      toCommit.push.date
     );
     //get all items linked to commits
     let res: any = [];
     let commitChangesArray: any = [];
     //extract linked items and append them to result
-    await Promise.all(
-      commitRange.value.map(async (commit: any) => {
-        if (commit.workItems) {
-          Promise.all(
-            commit.workItems.map(async (wi: any) => {
-              let populatedItem = await this.ticketsDataProvider.GetWorkItem(projectId, wi.id);
-              let changeSet: any = { workItem: populatedItem, commit: commit };
-              commitChangesArray.push(changeSet);
-            })
+    for (const commit of commitRange.value) {
+      if (commit.workItems) {
+        for (const wi of commit.workItems) {
+          let populatedItem = await this.ticketsDataProvider.GetWorkItem(
+            projectId,
+            wi.id
           );
+          let changeSet: any = { workItem: populatedItem, commit: commit };
+          commitChangesArray.push(changeSet);
         }
-      })
-    );
+      }
+    }
     //get all items and pr data from pr's in commit range - using the above function
     let pullRequestsChangesArray =
       await this.GetPullRequestsLinkedItemsInCommitRange(
@@ -167,15 +160,13 @@ export default class GitDataProvider {
     res = [...commitChangesArray, ...pullRequestsChangesArray];
     return res;
   } //GetItemsInCommitRange
-
   async GetCommitByCommitId(
     projectId: string,
     repositoryId: string,
     commitSha: string
   ) {
     let url = `${this.orgUrl}${projectId}/_apis/git/repositories/${repositoryId}/commits/${commitSha}?api-version=5.0`;
-    let res = await TFSServices.getItemContent(url, this.token, "get");
-    return res;
+    return TFSServices.getItemContent(url, this.token, "get");
   }
   async GetCommitForPipeline(projectId: string, buildId: number) {
     let url = `${this.orgUrl}${projectId}/_apis/build/builds/${buildId}?api-version=5.0`;
@@ -196,14 +187,16 @@ export default class GitDataProvider {
     );
     await Promise.all(
       res.value.map(async (wi: any) => {
-        let populatedItem = await this.ticketsDataProvider.GetWorkItem(projectId, wi.id);
+        let populatedItem = await this.ticketsDataProvider.GetWorkItem(
+          projectId,
+          wi.id
+        );
         let changeSet: any = { workItem: populatedItem, build: toBuildId };
         linkedItemsArray.push(changeSet);
       })
     );
     return linkedItemsArray;
   } //GetCommitForPipeline
-
 
   async GetCommitsInDateRange(
     projectId: string,
@@ -212,10 +205,18 @@ export default class GitDataProvider {
     toDate: string
   ) {
     let url = `${this.orgUrl}${projectId}/_apis/git/repositories/${repositoryId}/commits?fromDate=${fromDate}&toDate=${toDate}&api-version=5.0`;
-    let res = await TFSServices.getItemContent(url, this.token, "get");
-    return res;
+    return TFSServices.getItemContent(url, this.token, "get");
   } //GetCommitsInDateRange
 
+  async GetCommitsInCommitRange(
+    projectId: string,
+    repositoryId: string,
+    fromSha: string,
+    toSha: string
+  ) {
+    let url = `${this.orgUrl}${projectId}/_apis/git/repositories/${repositoryId}/commits?searchCriteria.fromCommitId=${fromSha}&searchCriteria.toCommitId=${toSha}&searchCriteria.includeWorkItems=true&api-version=5.0`;
+    return TFSServices.getItemContent(url, this.token, "get");
+  } //GetCommitsInCommitRange
   async CreatePullRequestComment(
     projectName: string,
     repoID: string,
