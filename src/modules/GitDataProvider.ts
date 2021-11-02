@@ -129,8 +129,8 @@ export default class GitDataProvider {
     let commitRange = await this.GetCommitsInCommitRange(
       projectId,
       repositoryId,
-      toCommitSha,
-      fromCommitSha
+      fromCommitSha,
+      toCommitSha
     );
     //get all items linked to commits
     let res: any = [];
