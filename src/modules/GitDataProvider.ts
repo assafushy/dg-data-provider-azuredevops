@@ -119,19 +119,11 @@ export default class GitDataProvider {
     return ChangeSetsArray;
   } //GetPullRequestsInCommitRange
 
-  async GetItemsInCommitRange(
+  async GetItemsInCommitRange( 
     projectId: string,
     repositoryId: string,
-    fromCommitSha: string,
-    toCommitSha: string
+    commitRange:any
   ) {
-    //get commits in commit range
-    let commitRange = await this.GetCommitsInCommitRange(
-      projectId,
-      repositoryId,
-      toCommitSha,
-      fromCommitSha
-    );
     //get all items linked to commits
     let res: any = [];
     let commitChangesArray: any = [];
@@ -204,7 +196,7 @@ export default class GitDataProvider {
     fromDate: string,
     toDate: string
   ) {
-    let url = `${this.orgUrl}${projectId}/_apis/git/repositories/${repositoryId}/commits?fromDate=${fromDate}&toDate=${toDate}&api-version=5.0`;
+    let url = `${this.orgUrl}${projectId}/_apis/git/repositories/${repositoryId}/commits?fromDate=${fromDate}&toDate=${toDate}&searchCriteria.includeWorkItems=true&api-version=5.0`;
     return TFSServices.getItemContent(url, this.token, "get");
   } //GetCommitsInDateRange
 
