@@ -112,12 +112,6 @@ describe("git module - tests", () => {
       token
     );
     let gitDataProvider = await dgDataProviderAzureDevOps.getGitDataProvider();
-    // let commitRange = await gitDataProvider.GetCommitsInCommitRange(
-    //   "tests",
-    //   "68f2aee7-0864-458e-93ce-320303a080ed",
-    //   "4ce7f96f74f10bb60d27d7180a8d1bd44da1ffac",
-    //   "e46f8023be49db94b5cf188b41f7ba9db6fd8274"
-    // );
     let commitRange = await gitDataProvider.GetCommitsInDateRange(
       "tests",
       "68f2aee7-0864-458e-93ce-320303a080ed",
