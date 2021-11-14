@@ -35,7 +35,7 @@ export default class TestDataProvider {
     project: string
   ): Promise<string> {
     let testPlanUrl: string = `${this.orgUrl}${project}/_apis/test/plans/?api-version=5.0`; //newer api versions dont work.
-    let testPlans: any = await TFSServices.getItemContent(
+    let testPlans = await TFSServices.getItemContent(
       testPlanUrl,
       this.token
     );
@@ -177,7 +177,7 @@ export default class TestDataProvider {
   }
 
   ParseSteps(
-    steps: String
+    steps: string
   ) {
     let stepsLsist: Array<TestSteps> = new Array<TestSteps>();
     const start: string = ";P&gt;";

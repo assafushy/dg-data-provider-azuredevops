@@ -380,15 +380,8 @@ export default class TicketsDataProvider {
   ) {
     let url = 
     `${this.orgUrl}${projectName}/_apis/wit/workitems/$${wiType}?bypassRules=${String(byPass).toString()}&api-version=${this.apiVersion}`;
-    let res = await TFSServices.getItemContent(
-      url,
-      this.token,
-      "POST",
-      wiBody,
-      {"Content-Type": "application/json-patch+json"}
-      );
-    return res;
-  } //CreateNewWorkItem
+    return await TFSServices.getItemContent(url,this.token,"POST",wiBody,{"Content-Type": "application/json-patch+json"});
+    } //CreateNewWorkItem
 
   async GetWorkitemAttachments(
     project: string,
