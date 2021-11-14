@@ -88,15 +88,20 @@ describe("git module - tests", () => {
     );
     expect(json.comment).toBeDefined;
   });
-  test("should return commits with linked items in sha range", async () => {
+  test("should return commits with linked items in date range", async () => {
     let gitDataProvider = await dgDataProviderAzureDevOps.getGitDataProvider();
-    let json = await gitDataProvider.GetItemsInCommitRange(
+    let commitRange = await gitDataProvider.GetCommitsInDateRange(
       "tests",
       "68f2aee7-0864-458e-93ce-320303a080ed",
-      "e46f8023be49db94b5cf188b41f7ba9db6fd8274",
-      "4ce7f96f74f10bb60d27d7180a8d1bd44da1ffac"
+      "2018-10-21T12:51:51Z",
+      "2021-10-24T12:51:51Z",
     );
-    expect(json[0].workItem).toBeDefined();
+    let items = await gitDataProvider.GetItemsInCommitRange(
+      "tests",
+      "68f2aee7-0864-458e-93ce-320303a080ed",
+      commitRange
+    );
+    expect(items[0].workItem).toBeDefined();
   });
   test("should return source trigger commit for pipline", async () => {
     let gitDataProvider = await dgDataProviderAzureDevOps.getGitDataProvider();
