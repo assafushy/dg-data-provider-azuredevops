@@ -245,6 +245,7 @@ export default class TicketsDataProvider {
 
     return res;
   }
+  
   async GetModeledQueryResults(
     results: any,
     project: string

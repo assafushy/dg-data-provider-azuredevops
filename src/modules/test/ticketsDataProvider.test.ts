@@ -6,16 +6,13 @@ jest.setTimeout(60000);
 
 const orgUrl = process.env.ORG_URL;
 const token = process.env.PAT;
+const dgDataProviderAzureDevOps = new DgDataProviderAzureDevOps(orgUrl,token);
 
 const wiql =
   "SELECT [System.Id],[System.WorkItemType],[System.Title],[System.AssignedTo],[System.State],[System.Tags] FROM workitems WHERE [System.TeamProject]=@project";
 
 describe("ticket module - tests", () => {
-  test.skip("should create a new work item", async () => { 
-    let dgDataProviderAzureDevOps = new DgDataProviderAzureDevOps(
-      orgUrl,
-      token
-    );
+  test("should create a new work item", async () => { 
     let TicketDataProvider = await dgDataProviderAzureDevOps.getTicketsDataProvider();
     let body =
       [{ 
@@ -64,11 +61,7 @@ describe("ticket module - tests", () => {
     );
     expect(updatedWI.fields["System.Title"]).toBe("edited");
   });
-  test("should return doc-gen-tests shared queires", async () => {
-    let dgDataProviderAzureDevOps = new DgDataProviderAzureDevOps(
-      orgUrl,
-      token
-    );
+  test("should return shared queires", async () => {
     let TicketDataProvider = await dgDataProviderAzureDevOps.getTicketsDataProvider();
     let json = await TicketDataProvider.GetSharedQueries(
       "tests",
@@ -76,11 +69,7 @@ describe("ticket module - tests", () => {
     );
     expect(json.length).toBeGreaterThan(1);
   });
-  test("should return doc-gen-test query results", async () => {
-    let dgDataProviderAzureDevOps = new DgDataProviderAzureDevOps(
-      orgUrl,
-      token
-    );
+  test("should return query results", async () => {
     let TicketDataProvider = await dgDataProviderAzureDevOps.getTicketsDataProvider();
     let json = await TicketDataProvider.GetSharedQueries(
       "tests",
@@ -93,11 +82,7 @@ describe("ticket module - tests", () => {
     );
     expect(result.length).toBeGreaterThanOrEqual(1);
   });
-  test("should return doc-gen-test query results by query id", async () => {
-    let dgDataProviderAzureDevOps = new DgDataProviderAzureDevOps(
-      orgUrl,
-      token
-    );
+  test("should return query results by query id", async () => {
     let TicketDataProvider = await dgDataProviderAzureDevOps.getTicketsDataProvider();
     let result = await TicketDataProvider.GetQueryResultById(
       "08e044be-b9bc-4962-99c9-ffebb47ff95a",
@@ -106,10 +91,6 @@ describe("ticket module - tests", () => {
     expect(result.length).toBeGreaterThanOrEqual(1);
   });
   test("should return wi base on wiql string", async () => {
-    let dgDataProviderAzureDevOps = new DgDataProviderAzureDevOps(
-      orgUrl,
-      token
-    );
     let TicketDataProvider = await dgDataProviderAzureDevOps.getTicketsDataProvider();
     let result = await TicketDataProvider.GetQueryResultsByWiqlString(
       wiql,
@@ -118,10 +99,6 @@ describe("ticket module - tests", () => {
     expect(result.workItems.length).toBeGreaterThanOrEqual(1);
   });
   test("should return populated work items array", async () => {
-    let dgDataProviderAzureDevOps = new DgDataProviderAzureDevOps(
-      orgUrl,
-      token
-    );
     let TicketDataProvider = await dgDataProviderAzureDevOps.getTicketsDataProvider();
     let result = await TicketDataProvider.GetQueryResultsByWiqlString(
       wiql,
@@ -135,10 +112,6 @@ describe("ticket module - tests", () => {
     expect(res.length).toBeGreaterThanOrEqual(1);
   });
   test("should return list of attachments", async () => {
-    let dgDataProviderAzureDevOps = new DgDataProviderAzureDevOps(
-      orgUrl,
-      token
-    );
     let TicketDataProvider = await dgDataProviderAzureDevOps.getTicketsDataProvider();
     let attachList = await TicketDataProvider.GetWorkitemAttachments(
       "tests",
@@ -147,10 +120,6 @@ describe("ticket module - tests", () => {
     expect(attachList.length > 0).toBeDefined();
   });
   test("should return Json data of the attachment", async () => {
-    let dgDataProviderAzureDevOps = new DgDataProviderAzureDevOps(
-      orgUrl,
-      token
-    );
     let TicketDataProvider = await dgDataProviderAzureDevOps.getTicketsDataProvider();
     let attachedData = await TicketDataProvider.GetWorkitemAttachmentsJSONData(
       "tests",
@@ -159,14 +128,10 @@ describe("ticket module - tests", () => {
     expect(JSON.stringify(attachedData).length > 0).toBeDefined();
   });
   test("should return list of id & link object", async () => {
-    let dgDataProviderAzureDevOps = new DgDataProviderAzureDevOps(
-      orgUrl,
-      token
-    );
     let TicketDataProvider = await dgDataProviderAzureDevOps.getTicketsDataProvider();
     let attachList = await TicketDataProvider.GetLinksByIds(
       "tests",
-      [538]
+      [535]
     );
     expect(attachList.length).toBeGreaterThan(0);
   });

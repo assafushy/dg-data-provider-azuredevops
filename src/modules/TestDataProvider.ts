@@ -22,18 +22,19 @@ export default class TestDataProvider {
     this.apiVersion = apiVersion;
   }
 
-  async GetTestSuiteByTestCase(testCaseId: string): Promise<any> {
-    let url =
-      this.orgUrl +
-      `/_apis/testplan/suites?testCaseId=${testCaseId}&api-version=5.0`;
+  async GetTestSuiteByTestCase(
+    testCaseId: string
+  ): Promise<any> {
+    let url = `${this.orgUrl}/_apis/testplan/suites?testCaseId=${testCaseId}&api-version=${this.apiVersion}`;
     let testCaseData = await TFSServices.getItemContent(url, this.token);
     return testCaseData;
   }
 
   //get all test plans in the project
-  async GetTestPlans(project: string): Promise<string> {
-    let testPlanUrl: string =
-      this.orgUrl + project + "/_apis/test/plans/?api-version=5.0";
+  async GetTestPlans(
+    project: string
+  ): Promise<string> {
+    let testPlanUrl: string = `${this.orgUrl}${project}/_apis/test/plans/?api-version=5.0`; //newer api versions dont work.
     let testPlans: any = await TFSServices.getItemContent(
       testPlanUrl,
       this.token
@@ -42,7 +43,10 @@ export default class TestDataProvider {
   }
 
   // get all test suits in projct test plan
-  async GetTestSuites(project: string, planId: string): Promise<any> {
+  async GetTestSuites(
+    project: string,
+    planId: string
+  ): Promise<any> {
     let testsuitesUrl: string =
       this.orgUrl + project + "/_apis/test/Plans/" + planId + "/suites/";
     try {
@@ -54,7 +58,10 @@ export default class TestDataProvider {
     } catch (e) {}
   }
 
-  async GetTestSuitesForPlan(project: string, planid: string): Promise<any> {
+  async GetTestSuitesForPlan(
+    project: string,
+    planid: string
+  ): Promise<any> {
     let url =
       this.orgUrl +
       "/" +
@@ -80,6 +87,7 @@ export default class TestDataProvider {
     return suites;
   }
   //gets all testsuits recorsivly under test suite
+
   async GetTestSuiteById(
     project: string,
     planId: string,
@@ -103,6 +111,7 @@ export default class TestDataProvider {
     return dataSuites;
   }
   //gets all testcase under test suite acording to recursive flag
+
   async GetTestCasesBySuites(
     project: string,
     planId: string,
@@ -132,6 +141,7 @@ export default class TestDataProvider {
     }
     return testCasesList;
   }
+
   async StructureTestCase(
     project: string,
     testCases: any,
@@ -165,7 +175,10 @@ export default class TestDataProvider {
 
     return testCasesUrlList;
   }
-  ParseSteps(steps: String) {
+
+  ParseSteps(
+    steps: String
+  ) {
     let stepsLsist: Array<TestSteps> = new Array<TestSteps>();
     const start: string = ";P&gt;";
     const end: string = "&lt;/P";
@@ -200,6 +213,7 @@ export default class TestDataProvider {
 
     return stepsLsist;
   }
+
   async GetTestCases(
     project: string,
     planId: string,
@@ -219,6 +233,7 @@ export default class TestDataProvider {
     );
     return testCases;
   }
+
   //gets all test point in a test case
   async GetTestPoint(
     project: string,
@@ -227,15 +242,7 @@ export default class TestDataProvider {
     testCaseId: string
   ): Promise<any> {
     let testPointUrl: string =
-      this.orgUrl +
-      project +
-      "/_apis/test/Plans/" +
-      planId +
-      "/Suites/" +
-      suiteId +
-      "/points?testCaseId=" +
-      testCaseId +
-      "&api-version=5.1";
+    `${this.orgUrl}${project}/_apis/test/Plans/${planId}/Suites/${suiteId}/points?testCaseId=${testCaseId}&api-version=${this.apiVersion}`;
     let testPoints: any = await TFSServices.getItemContent(
       testPointUrl,
       this.token
@@ -253,7 +260,7 @@ export default class TestDataProvider {
       logger.info(
         `Create test run op test point  ${testPointId} ,test planId : ${testPlanId}`
       );
-      let Url = this.orgUrl + projectName + `/_apis/test/runs?api-version=5.1`;
+      let Url = `${this.orgUrl}${projectName}/_apis/test/runs?api-version=${this.apiVersion}`;
       let data = {
         name: testRunName,
         plan: {
@@ -281,8 +288,7 @@ export default class TestDataProvider {
     state: string
   ): Promise<any> {
     logger.info(`Update runId : ${runId} to state : ${state}`);
-    let Url =
-      this.orgUrl + projectName + `/_apis/test/Runs/${runId}?api-version=5.1`;
+    let Url = `${this.orgUrl}${projectName}/_apis/test/Runs/${runId}?api-version=${this.apiVersion}`;
     let data = {
       state: state,
     };
@@ -295,6 +301,7 @@ export default class TestDataProvider {
     );
     return res;
   }
+
   async UpdateTestCase(
     projectName: string,
     runId: string,
@@ -302,10 +309,7 @@ export default class TestDataProvider {
   ): Promise<any> {
     let data: any;
     logger.info(`Update test case, runId : ${runId} to state : ${state}`);
-    let Url =
-      this.orgUrl +
-      projectName +
-      `/_apis/test/Runs/${runId}/results?api-version=5.1`;
+    let Url = `${this.orgUrl}${projectName}/_apis/test/Runs/${runId}/results?api-version=${this.apiVersion}`;
     switch (state) {
       case 0:
         logger.info(`Reset test case to Active state `);
@@ -366,10 +370,7 @@ export default class TestDataProvider {
     attachmentType: string
   ): Promise<any> {
     logger.info(`Upload attachment to test run : ${runID}`);
-    let Url =
-      this.orgUrl +
-      projectName +
-      `/_apis/test/Runs/${runID}/attachments?api-version=5.1-preview.1`;
+    let Url = `${this.orgUrl}${projectName}/_apis/test/Runs/${runID}/attachments?api-version=${this.apiVersion}`;
     let data = {
       stream: stream,
       fileName: fileName,
@@ -385,9 +386,12 @@ export default class TestDataProvider {
     );
     return res;
   }
-  async GetTestRunById(projectName: string, runId: string): Promise<any> {
+
+  async GetTestRunById(
+    projectName: string, runId: string
+  ): Promise<any> {
     logger.info(`getting test run id: ${runId}`);
-    let url = `${this.orgUrl}${projectName}/_apis/test/Runs/${runId}?api-version=5.1`;
+    let url = `${this.orgUrl}${projectName}/_apis/test/Runs/${runId}?api-version=${this.apiVersion}`;
     let res = await TFSServices.getItemContent(
       url,
       this.token,
@@ -405,7 +409,7 @@ export default class TestDataProvider {
     logger.info(
       `get test points at project ${projectName} , of testCaseId : ${testCaseId}`
     );
-    let url = `${this.orgUrl}${projectName}/_apis/test/points?api-version=5.1-preview.2`;
+    let url = `${this.orgUrl}${projectName}/_apis/test/points?api-version=${this.apiVersion}`;
     let data = {
       PointsFilter: {
         TestcaseIds: [testCaseId],

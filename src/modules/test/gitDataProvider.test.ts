@@ -1,26 +1,22 @@
 import DgDataProviderAzureDevOps from "../..";
 
 require("dotenv").config();
-jest.setTimeout(10000);
+jest.setTimeout(60000);
 
 const orgUrl = process.env.ORG_URL;
 const token = process.env.PAT;
+const dgDataProviderAzureDevOps = new DgDataProviderAzureDevOps(orgUrl,token);
+
 
 describe("git module - tests", () => {
   test("should return repo list for teamProject", async () => {
-    let dgDataProviderAzureDevOps = new DgDataProviderAzureDevOps(
-      orgUrl,
-      token
-    );
     let gitDataProvider = await dgDataProviderAzureDevOps.getGitDataProvider();
-    let json: any = await gitDataProvider.GetTeamProjectGitReposList("tests");
+    let json: any = await gitDataProvider.GetTeamProjectGitReposList(
+      "tests"
+    );
     expect(json).toBeDefined();
   });
   test("should return repo from repoid", async () => {
-    let dgDataProviderAzureDevOps = new DgDataProviderAzureDevOps(
-      orgUrl,
-      token
-    );
     let gitDataProvider = await dgDataProviderAzureDevOps.getGitDataProvider();
     let json: any = await gitDataProvider.GetGitRepoFromRepoId(
       "68f2aee7-0864-458e-93ce-320303a080ed"
@@ -28,19 +24,13 @@ describe("git module - tests", () => {
     expect(json).toBeDefined();
   });
   test("should return repo by pullrequest id", async () => {
-    let dgDataProviderAzureDevOps = new DgDataProviderAzureDevOps(
-      orgUrl,
-      token
-    );
     let gitDataProvider = await dgDataProviderAzureDevOps.getGitDataProvider();
-    let json: any = await gitDataProvider.GetGitRepoFromPrId(73);
+    let json: any = await gitDataProvider.GetGitRepoFromPrId(
+      73
+    );
     expect(json.repository).toBeDefined();
   });
   test("should return commits by pullrequest & repo id", async () => {
-    let dgDataProviderAzureDevOps = new DgDataProviderAzureDevOps(
-      orgUrl,
-      token
-    );
     let gitDataProvider = await dgDataProviderAzureDevOps.getGitDataProvider();
     let json: any = await gitDataProvider.GetGitRepoFromPrId(73);
     let commitJson: any = await gitDataProvider.GetPullRequestCommits(
@@ -50,10 +40,6 @@ describe("git module - tests", () => {
     expect(commitJson.value.length).toBeGreaterThan(0);
   });
   test("should return pullrequest threads", async () => {
-    let dgDataProviderAzureDevOps = new DgDataProviderAzureDevOps(
-      orgUrl,
-      token
-    );
     let gitDataProvider = await dgDataProviderAzureDevOps.getGitDataProvider();
     let json = await gitDataProvider.GetPullRequestComments(
       "tests",
@@ -93,24 +79,16 @@ describe("git module - tests", () => {
         },
       },
     };
-    let dgDataProviderAzureDevOps = new DgDataProviderAzureDevOps(
-      orgUrl,
-      token
-    );
     let gitDataProvider = await dgDataProviderAzureDevOps.getGitDataProvider();
     let json = await gitDataProvider.CreatePullRequestComment(
       "tests",
-      "d3e3c3a9-ed5f-41e3-8885-8c5d8a672d33",
+      "68f2aee7-0864-458e-93ce-320303a080ed",
       73,
       data
     );
     expect(json.comment).toBeDefined;
   });
   test("should return commits with linked items in sha range", async () => {
-    let dgDataProviderAzureDevOps = new DgDataProviderAzureDevOps(
-      orgUrl,
-      token
-    );
     let gitDataProvider = await dgDataProviderAzureDevOps.getGitDataProvider();
     let json = await gitDataProvider.GetItemsInCommitRange(
       "tests",
@@ -121,19 +99,14 @@ describe("git module - tests", () => {
     expect(json[0].workItem).toBeDefined();
   });
   test("should return source trigger commit for pipline", async () => {
-    let dgDataProviderAzureDevOps = new DgDataProviderAzureDevOps(
-      orgUrl,
-      token
-    );
     let gitDataProvider = await dgDataProviderAzureDevOps.getGitDataProvider();
-    let json = await gitDataProvider.GetCommitForPipeline("DevOps", 18732);
-    expect(json).toBe("006faa1556e6788eea691fe922736b653818dba7");
+    let json = await gitDataProvider.GetCommitForPipeline(
+      "tests",
+      248
+    );
+    expect(json).toBe("59d59691ee002815e7aa774f0a90ef28a6e4708f");
   });
   test("should return commits in commit range", async () => {
-    let dgDataProviderAzureDevOps = new DgDataProviderAzureDevOps(
-      orgUrl,
-      token
-    );
     let gitDataProvider = await dgDataProviderAzureDevOps.getGitDataProvider();
     let json = await gitDataProvider.GetCommitsInCommitRange(
       "tests",
@@ -143,40 +116,23 @@ describe("git module - tests", () => {
     );
     expect(json.count).toBeGreaterThan(0);
   });
-  test("should return source trigger commit for pipline", async () => {
-    let dgDataProviderAzureDevOps = new DgDataProviderAzureDevOps(
-      orgUrl,
-      token
-    );
-    let gitDataProvider = await dgDataProviderAzureDevOps.getGitDataProvider();
-    let json = await gitDataProvider.GetCommitForPipeline("DevOps", 18732);
-    expect(json).toBe("006faa1556e6788eea691fe922736b653818dba7");
-  });
-  test.skip("should return items linked in build range", async () => {
-    let dgDataProviderAzureDevOps = new DgDataProviderAzureDevOps(
-      orgUrl,
-      token
-    );
+  test("should return items linked in build range", async () => { //the api call doesen't work as intended
     let gitDataProvider = await dgDataProviderAzureDevOps.getGitDataProvider();
     let json = await gitDataProvider.GetItemsForPipelinesRange(
-      "DevOps",
-      18492,
-      18885
+      "tests",
+      244,
+      244
     );
-    expect(json.length).toBe(3);
+    expect(json.length).toBeGreaterThan(0);
   });
   test("should return commits range between dates ", async () => {
-    let dgDataProviderAzureDevOps = new DgDataProviderAzureDevOps(
-      orgUrl,
-      token
-    );
     let gitDataProvider = await dgDataProviderAzureDevOps.getGitDataProvider();
     let json = await gitDataProvider.GetCommitsInDateRange(
-      "DevOps",
-      "95c0c5dd-fefd-411e-bb6b-850e7ce7732a",
-      "2021-01-30T12:51:51Z",
-      "2021-06-30T12:51:51Z"
+      "tests",
+      "68f2aee7-0864-458e-93ce-320303a080ed",
+      "2018-01-30T12:51:51Z",
+      "2021-10-30T12:51:51Z"
     );
-    expect(json.count).toBe(15);
+    expect(json.count).toBe(14);
   });
 }); //describe

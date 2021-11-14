@@ -1,17 +1,15 @@
 import DgDataProviderAzureDevOps from "../..";
 
 require("dotenv").config();
-jest.setTimeout(25000);
+jest.setTimeout(60000);
 
 const orgUrl = process.env.ORG_URL;
 const token = process.env.PAT;
+const dgDataProviderAzureDevOps = new DgDataProviderAzureDevOps(orgUrl,token);
+
 
 describe("pipeline module - tests", () => {
   test("should return pipeline info", async () => {
-    let dgDataProviderAzureDevOps = new DgDataProviderAzureDevOps(
-      orgUrl,
-      token
-    );
     let pipelinesDataProvider = await dgDataProviderAzureDevOps.getPipelinesDataProvider()
     let json = await pipelinesDataProvider.getPipelineFromPipelineId(
       "tests",
@@ -20,10 +18,6 @@ describe("pipeline module - tests", () => {
     expect(json.id).toBe(244);
   });
   test("should return Release definition", async () => {
-    let dgDataProviderAzureDevOps = new DgDataProviderAzureDevOps(
-      orgUrl,
-      token
-    );
     let pipelinesDataProvider = await dgDataProviderAzureDevOps.getPipelinesDataProvider()
     let json = await pipelinesDataProvider.GetReleaseByReleaseId(
       "tests",
@@ -32,10 +26,6 @@ describe("pipeline module - tests", () => {
     expect(json.id).toBe(1);
   });
   test("should return OK(200) as response ", async () => {
-    let dgDataProviderAzureDevOps = new DgDataProviderAzureDevOps(
-      orgUrl,
-      token
-    );
     let PipelineDataProvider = await dgDataProviderAzureDevOps.getPipelinesDataProvider();
     let result = await PipelineDataProvider.TriggerBuildById(
       "tests",
@@ -45,10 +35,6 @@ describe("pipeline module - tests", () => {
     expect(result.status).toBe(200);
   });
   test("should the path to zip file as response ", async () => {
-    let dgDataProviderAzureDevOps = new DgDataProviderAzureDevOps(
-      orgUrl,
-      token
-    );
     let PipelineDataProvider = await dgDataProviderAzureDevOps.getPipelinesDataProvider();
     let result = await PipelineDataProvider.GetArtifactByBuildId(
       "tests",
