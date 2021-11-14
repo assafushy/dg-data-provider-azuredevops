@@ -15,7 +15,6 @@ describe("Test module - tests", () => {
   });
   test("should return test suites by plan", async () => { //not working yet
     let TestDataProvider = await dgDataProviderAzureDevOps.getTestDataProvider();
-    let json = await TestDataProvider.GetTestPlans("tests");
     let testSuites = await TestDataProvider.GetTestSuitesByPlan(
       "tests",
       "540",
@@ -35,12 +34,6 @@ describe("Test module - tests", () => {
   });
   test("should use Helper.findSuitesRecursive twice after restarting static value of Helper.first=True ", async () => {
     let TestDataProvider = await dgDataProviderAzureDevOps.getTestDataProvider();
-    let attachList = await TestDataProvider.GetTestCasesBySuites(
-      "tests",
-      "540",
-      "549",
-      true
-    );
     let suitesByPlan = await TestDataProvider.GetTestSuitesByPlan(
       "tests",
       "540",

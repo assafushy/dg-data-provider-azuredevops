@@ -35,11 +35,7 @@ export default class TestDataProvider {
     project: string
   ): Promise<string> {
     let testPlanUrl: string = `${this.orgUrl}${project}/_apis/test/plans/?api-version=5.0`; //newer api versions dont work.
-    let testPlans = await TFSServices.getItemContent(
-      testPlanUrl,
-      this.token
-    );
-    return testPlans;
+    return TFSServices.getItemContent(testPlanUrl,this.token);
   }
 
   // get all test suits in projct test plan
