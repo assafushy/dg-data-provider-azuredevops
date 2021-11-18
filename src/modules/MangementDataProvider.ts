@@ -26,7 +26,7 @@ export default class MangementDataProvider {
 
   //get all projects 
   async GetProjects(): Promise<any> {
-    let projectUrl: string = this.orgUrl + "_apis/projects?api-version=5.1";
+    let projectUrl: string = `${this.orgUrl}_apis/projects?api-version=${this.apiVersion}`;
     let projects: any = await TFSServices.getItemContent(
       projectUrl,
       this.token
@@ -35,7 +35,9 @@ export default class MangementDataProvider {
   }
 
   // get project by  name return project object
-  async GetProjectByName(projectName: string): Promise<any> {
+  async GetProjectByName(
+    projectName: string
+  ): Promise<any> {
     try {
       let projects: any = await this.GetProjects();
       for (let i = 0; i < projects.value.length; i++) {
@@ -49,9 +51,10 @@ export default class MangementDataProvider {
   }
 
   // get project by id return project object
-  async GetProjectByID(projectID: string): Promise<any> {
-    let projectUrl: string =
-      this.orgUrl + "_apis/projects/" + projectID + "?api-version=5.1";
+  async GetProjectByID(
+    projectID: string
+  ): Promise<any> {
+    let projectUrl: string = `${this.orgUrl}_apis/projects/${projectID}?api-version=${this.apiVersion}`;
     let project: any = await TFSServices.getItemContent(projectUrl, this.token);
     return project;
   }

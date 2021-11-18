@@ -23,11 +23,17 @@ export default class TicketsDataProvider {
     this.apiVersion = apiVersion;
   }
 
-  async GetWorkItem(project: string, id: string): Promise<any> {
+  async GetWorkItem(
+    project: string,
+    id: string
+  ): Promise<any> {
     let url = `${this.orgUrl}${project}/_apis/wit/workitems/${id}?$expand=All`;
     return TFSServices.getItemContent(url, this.token);
   }
-  async GetLinksByIds(project: string, ids: any) {
+  async GetLinksByIds(
+    project: string, 
+    ids: any
+  ) {
     var trace: Array<Trace> = new Array<Trace>();
     let wis = await this.PopulateWorkItemsByIds(ids, project);
     let linksMap: any = await this.GetRelationsIds(wis);
@@ -48,7 +54,10 @@ export default class TicketsDataProvider {
     }
     return trace;
   }
-  async GetParentLink(project: string, wi: any) {
+  async GetParentLink(
+    project: string,
+    wi: any
+  ) {
     let trace: Trace = new Trace();
     if (wi != null) {
       trace.id = wi.id;
@@ -63,9 +72,9 @@ export default class TicketsDataProvider {
     }
     return trace;
   }
-  async GetRelationsIds(ids: any) {
-    //let links: Array<Relations> = new Array<Relations>();
-
+  async GetRelationsIds(
+    ids: any
+  ) {
     let rel = new Map<string, Relations>();
     try {
       for (let i = 0; i < ids.length; i++) {
@@ -82,12 +91,14 @@ export default class TicketsDataProvider {
         rel.set(ids[i].id, link);
       }
     } catch (e) {}
-
     return rel;
   }
-  async GetLinks(project: string, wi: any, links: any) {
+  async GetLinks(
+    project: string,
+    wi: any,
+    links: any
+  ) {
     var linkList: Array<Links> = new Array<Links>();
-
     for (let i = 0; i < wi.relations.length; i++) {
       for (let j = 0; j < links.length; j++) {
         let index = wi.relations[i].url.lastIndexOf("/");
@@ -107,18 +118,16 @@ export default class TicketsDataProvider {
     return linkList;
   }
   // gets queries recursiv
-  async GetSharedQueries(project: string, path: string): Promise<any> {
+  async GetSharedQueries(
+    project: string,
+    path: string
+  ): Promise<any> {
     let url;
     try {
       if (path == "")
-        url =
-          this.orgUrl +
-          project +
-          "/_apis/wit/queries/Shared%20Queries?$depth=1";
+        url = `${this.orgUrl}${project}/_apis/wit/queries/Shared%20Queries?$depth=1`;
       else
-        url =
-          this.orgUrl + project + "/_apis/wit/queries/" + path + "?$depth=1";
-
+        url = `${this.orgUrl}${project}/_apis/wit/queries/${path}?$depth=1`;
       let queries: any = await TFSServices.getItemContent(url, this.token);
       for (let i = 0; i < queries.children.length; i++)
         if (queries.children[i].isFolder) {
@@ -131,7 +140,9 @@ export default class TicketsDataProvider {
     } catch (e) {}
   }
   // get queris structured
-  GetModeledQuery(list: Array<any>): Array<any> {
+  GetModeledQuery(
+    list: Array<any>
+  ): Array<any> {
     let queryListObject: Array<any> = [];
     list.forEach((query) => {
       let newObj = {
@@ -167,7 +178,7 @@ export default class TicketsDataProvider {
     projectName: string
   ): Promise<any> {
     let res;
-    let url: string = `${this.orgUrl}${projectName}/_apis/wit/wiql?$top=2147483646&expand={all}&api-version=3.1`;
+    let url = `${this.orgUrl}${projectName}/_apis/wit/wiql?$top=2147483646&expand={all}&api-version=${this.apiVersion}`;
     try {
       res = await TFSServices.getItemContent(url, this.token, "post", {
         query: wiql,
@@ -178,9 +189,11 @@ export default class TicketsDataProvider {
     }
     return res;
   }
-  async GetQueryResultById(query: string, project: string): Promise<any> {
-    var url = this.orgUrl + project + "/_apis/wit/queries/" + query;
-
+  async GetQueryResultById(
+    query: string,
+    project: string
+  ): Promise<any> {
+    var url = `${this.orgUrl}${project}/_apis/wit/queries/${query}`;
     let querie: any = await TFSServices.getItemContent(url, this.token);
     var wiql = querie._links.wiql;
     return await this.GetQueryResultsByWiqlHref(wiql.href, project);
@@ -190,11 +203,10 @@ export default class TicketsDataProvider {
     workItemsArray: any[] = [],
     projectName: string = ""
   ): Promise<any[]> {
-    let url = `${this.orgUrl}${projectName}/_apis/wit/workitemsbatch?api-version=5.0`;
+    let url = `${this.orgUrl}${projectName}/_apis/wit/workitemsbatch?api-version=${this.apiVersion}`;
     let res: any[] = [];
     let divByMax = Math.floor(workItemsArray.length / 200);
     let modulusByMax = workItemsArray.length % 200;
-
     //iterating
     for (let i = 0; i < divByMax; i++) {
       let from = i * 200;
@@ -233,7 +245,11 @@ export default class TicketsDataProvider {
 
     return res;
   }
-  async GetModeledQueryResults(results: any, project: string) {
+  
+  async GetModeledQueryResults(
+    results: any,
+    project: string
+  ) {
     let ticketsDataProvider = new TicketsDataProvider(
       this.orgUrl,
       this.token,
@@ -329,7 +345,10 @@ export default class TicketsDataProvider {
     return queryResult;
   }
 
-  BuildColumns(results: any, queryResult: Query) {
+  BuildColumns(
+    results: any,
+    queryResult: Query
+  ) {
     for (var i = 0; i < results.columns.length; i++) {
       queryResult.columns[i] = new Column();
       queryResult.columns[i].name = results.columns[i].name;
@@ -359,19 +378,15 @@ export default class TicketsDataProvider {
     wiType: string,
     byPass: boolean
   ) {
-    let res: any;
-    let url: string = `${
-      this.orgUrl
-    }${projectName}/_apis/wit/workitems/$${wiType}?bypassRules=${String(
-      byPass
-    ).toString()}&api-version=4.1`;
-    res = await TFSServices.getItemContent(url, this.token, "post", wiBody, {
-      "Content-Type": "application/json-patch+json",
-    });
-    return res;
-  } //CreateNewWorkItem
+    let url = 
+    `${this.orgUrl}${projectName}/_apis/wit/workitems/$${wiType}?bypassRules=${String(byPass).toString()}&api-version=${this.apiVersion}`;
+    return TFSServices.getItemContent(url,this.token,"POST",wiBody,{"Content-Type": "application/json-patch+json"});
+    } //CreateNewWorkItem
 
-  async GetWorkitemAttachments(project: string, id: string) {
+  async GetWorkitemAttachments(
+    project: string,
+    id: string
+  ) {
     let attachmentList: Array<string> = [];
     let ticketsDataProvider = new TicketsDataProvider(
       this.orgUrl,
@@ -398,13 +413,11 @@ export default class TicketsDataProvider {
     }
   }
 
-  async GetWorkitemAttachmentsJSONData(project: string, attachmentId: string) {
-    let wiuRL =
-      this.orgUrl +
-      project +
-      "/_apis/wit/attachments/" +
-      attachmentId +
-      "?api-version=5.0-preview.3";
+  async GetWorkitemAttachmentsJSONData(
+    project: string,
+    attachmentId: string
+  ) {
+    let wiuRL =`${this.orgUrl}${project}/_apis/wit/attachments/${attachmentId}?api-version=${this.apiVersion}`;
     let attachment = await TFSServices.getItemContent(wiuRL, this.token);
     return attachment;
   }
@@ -416,11 +429,8 @@ export default class TicketsDataProvider {
     byPass: boolean
   ) {
     let res: any;
-    let url: string = `${
-      this.orgUrl
-    }${projectName}/_apis/wit/workitems/${workItemId}?bypassRules=${String(
-      byPass
-    ).toString()}&api-version=4.1`;
+    let url: string = 
+    `${this.orgUrl}${projectName}/_apis/wit/workitems/${workItemId}?bypassRules=${String(byPass).toString()}&api-version=${this.apiVersion}`;
     res = await TFSServices.getItemContent(url, this.token, "patch", wiBody, {
       "Content-Type": "application/json-patch+json",
     });

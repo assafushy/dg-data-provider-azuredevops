@@ -17,15 +17,19 @@ export default class GitDataProvider {
       this.apiVersion
     );
   }
-  async GetTeamProjectGitReposList(teamProject: string) {
+  async GetTeamProjectGitReposList(
+    teamProject: string
+  ) {
     logger.debug(`fetching repos list for team project - ${teamProject}`);
-    let url = `${this.orgUrl}/${teamProject}/_apis/git/repositories?api-version=5.0`;
+    let url = `${this.orgUrl}/${teamProject}/_apis/git/repositories?api-version=${this.apiVersion}`;
     return TFSServices.getItemContent(url, this.token, "get");
   } //GetGitRepoFromPrId
 
-  async GetGitRepoFromRepoId(repoId: string) {
+  async GetGitRepoFromRepoId(
+    repoId: string
+  ) {
     logger.debug(`fetching repo data by id - ${repoId}`);
-    let url = `${this.orgUrl}_apis/git/repositories/${repoId}?api-version=5.0`;
+    let url = `${this.orgUrl}_apis/git/repositories/${repoId}?api-version=${this.apiVersion}`;
     return TFSServices.getItemContent(url, this.token, "get");
   } //GetGitRepoFromPrId
 
@@ -40,14 +44,19 @@ export default class GitDataProvider {
     return jsonObject;
   } //GetJsonFileFromGitRepo
 
-  async GetGitRepoFromPrId(pullRequestId: number) {
-    let url = `${this.orgUrl}_apis/git/pullrequests/${pullRequestId}?api-version=5.0`;
+  async GetGitRepoFromPrId(
+    pullRequestId: number
+  ) {
+    let url = `${this.orgUrl}_apis/git/pullrequests/${pullRequestId}?api-version=${this.apiVersion}`;
     let res = await TFSServices.getItemContent(url, this.token, "get");
     return res;
   } //GetGitRepoFromPrId
 
-  async GetPullRequestCommits(repositoryId: string, pullRequestId: number) {
-    let url = `${this.orgUrl}_apis/git/repositories/${repositoryId}/pullRequests/${pullRequestId}/commits?api-version=5.0`;
+  async GetPullRequestCommits(
+    repositoryId: string,
+    pullRequestId: number
+  ) {
+    let url = `${this.orgUrl}_apis/git/repositories/${repositoryId}/pullRequests/${pullRequestId}/commits?api-version=${this.apiVersion}`;
     let res = await TFSServices.getItemContent(url, this.token, "get");
     return res;
   } //GetGitRepoFromPrId
@@ -60,7 +69,7 @@ export default class GitDataProvider {
     let pullRequestsFilteredArray: any = [];
     let ChangeSetsArray: any = [];
     //get all pr's in git repo
-    let url = `${this.orgUrl}${projectId}/_apis/git/repositories/${repositoryId}/pullrequests?status=completed&includeLinks=true&api-version=5.1`;
+    let url = `${this.orgUrl}${projectId}/_apis/git/repositories/${repositoryId}/pullrequests?status=completed&includeLinks=true&api-version=${this.apiVersion}`;
     logger.debug(`request url: ${url}`);
     let pullRequestsArray = await TFSServices.getItemContent(
       url,
@@ -152,16 +161,21 @@ export default class GitDataProvider {
     res = [...commitChangesArray, ...pullRequestsChangesArray];
     return res;
   } //GetItemsInCommitRange
+
   async GetCommitByCommitId(
     projectId: string,
     repositoryId: string,
     commitSha: string
   ) {
-    let url = `${this.orgUrl}${projectId}/_apis/git/repositories/${repositoryId}/commits/${commitSha}?api-version=5.0`;
+    let url = `${this.orgUrl}${projectId}/_apis/git/repositories/${repositoryId}/commits/${commitSha}?api-version=${this.apiVersion}`;
     return TFSServices.getItemContent(url, this.token, "get");
   }
-  async GetCommitForPipeline(projectId: string, buildId: number) {
-    let url = `${this.orgUrl}${projectId}/_apis/build/builds/${buildId}?api-version=5.0`;
+
+  async GetCommitForPipeline(
+    projectId: string,
+    buildId: number
+  ) {
+    let url = `${this.orgUrl}${projectId}/_apis/build/builds/${buildId}?api-version=${this.apiVersion}`;
     let res = await TFSServices.getItemContent(url, this.token, "get");
     return res.sourceVersion;
   } //GetCommitForPipeline
@@ -172,7 +186,7 @@ export default class GitDataProvider {
     toBuildId: number
   ) {
     let linkedItemsArray: any = [];
-    let url = `${this.orgUrl}${projectId}/_apis/build/workitems?fromBuildId=${fromBuildId}&toBuildId=${toBuildId}&api-version=5.0-preview.2`;
+    let url = `${this.orgUrl}${projectId}/_apis/build/workitems?fromBuildId=${fromBuildId}&toBuildId=${toBuildId}&api-version=${this.apiVersion}`;
     let res = await TFSServices.getItemContent(url, this.token, "get");
     logger.info(
       `recieved ${res.count} items in build rang ${fromBuildId}-${toBuildId}`
@@ -196,7 +210,7 @@ export default class GitDataProvider {
     fromDate: string,
     toDate: string
   ) {
-    let url = `${this.orgUrl}${projectId}/_apis/git/repositories/${repositoryId}/commits?fromDate=${fromDate}&toDate=${toDate}&searchCriteria.includeWorkItems=true&api-version=5.0`;
+    let url = `${this.orgUrl}${projectId}/_apis/git/repositories/${repositoryId}/commits?fromDate=${fromDate}&toDate=${toDate}&searchCriteria.includeWorkItems=true&api-version=${this.apiVersion}`;
     return TFSServices.getItemContent(url, this.token, "get");
   } //GetCommitsInDateRange
 
@@ -206,16 +220,17 @@ export default class GitDataProvider {
     fromSha: string,
     toSha: string
   ) {
-    let url = `${this.orgUrl}${projectId}/_apis/git/repositories/${repositoryId}/commits?searchCriteria.fromCommitId=${fromSha}&searchCriteria.toCommitId=${toSha}&searchCriteria.includeWorkItems=true&api-version=5.0`;
+    let url = `${this.orgUrl}${projectId}/_apis/git/repositories/${repositoryId}/commits?searchCriteria.fromCommitId=${fromSha}&searchCriteria.toCommitId=${toSha}&searchCriteria.includeWorkItems=true&api-version=${this.apiVersion}`;
     return TFSServices.getItemContent(url, this.token, "get");
   } //GetCommitsInCommitRange
+  
   async CreatePullRequestComment(
     projectName: string,
     repoID: string,
     pullRequestID: number,
     threads: any
   ) {
-    let url: string = `${this.orgUrl}${projectName}/_apis/git/repositories/${repoID}/pullRequests/${pullRequestID}/threads?api-version=5.0`;
+    let url: string = `${this.orgUrl}${projectName}/_apis/git/repositories/${repoID}/pullRequests/${pullRequestID}/threads?api-version=${this.apiVersion}`;
     let res: any = await TFSServices.getItemContent(
       url,
       this.token,
@@ -231,7 +246,7 @@ export default class GitDataProvider {
     repoID: string,
     pullRequestID: number
   ) {
-    let url: string = `${this.orgUrl}${projectName}/_apis/git/repositories/${repoID}/pullRequests/${pullRequestID}/threads?api-version=5.0`;
+    let url: string = `${this.orgUrl}${projectName}/_apis/git/repositories/${repoID}/pullRequests/${pullRequestID}/threads?api-version=${this.apiVersion}`;
     let res: any = await TFSServices.getItemContent(
       url,
       this.token,
