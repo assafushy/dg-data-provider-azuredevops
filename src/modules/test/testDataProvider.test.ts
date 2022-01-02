@@ -1,7 +1,7 @@
 import DgDataProviderAzureDevOps from "../..";
 
 require("dotenv").config();
-jest.setTimeout(60000);
+jest.setTimeout(600000);
 
 const orgUrl = process.env.ORG_URL;
 const token = process.env.PAT;
@@ -22,12 +22,12 @@ describe("Test module - tests", () => {
     );
     expect(testSuites[0].name).toBe("TestSuite");
   });
-  test("should return list of test cases", async () => { //not working yet
+  test("should return list of test cases", async () => {
     let TestDataProvider = await dgDataProviderAzureDevOps.getTestDataProvider();
     let attachList: any = await TestDataProvider.GetTestCasesBySuites(
       "tests",
-      "540",
-      "549",
+      "545",
+      "546",
       true
     );
     expect(attachList.length > 0).toBeDefined();
@@ -36,7 +36,7 @@ describe("Test module - tests", () => {
     let TestDataProvider = await dgDataProviderAzureDevOps.getTestDataProvider();
     let suitesByPlan = await TestDataProvider.GetTestSuitesByPlan(
       "tests",
-      "540",
+      "545",
       true
     );
     expect(suitesByPlan.length > 0).toBeDefined();
