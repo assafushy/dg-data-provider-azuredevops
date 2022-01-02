@@ -48,7 +48,7 @@ export class Helper {
     recursive: boolean
   ): Array<suiteData> {
     for (let i = 0; i < suits.length; i++) {
-      if (suits[i].parentSuiteId != 0)
+      if (suits[i].parentSuiteId != 0) {
         if (suits[i].parentSuiteId == foundId) {
           let suit: suiteData = new suiteData(
             suits[i].title,
@@ -75,9 +75,10 @@ export class Helper {
             suits,
             suits[i].id,
             true
-          );
+            );
           this.level--;
-        } else {
+        }
+      } else {
           if (suits[i].id == foundId && Helper.first) {
             let suit: suiteData = new suiteData(
               suits[i].title,
