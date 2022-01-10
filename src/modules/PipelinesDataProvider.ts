@@ -92,7 +92,7 @@ export default class PipelinesDataProvider {
   ): Promise<any> {
     let url = `${this.orgUrl}${projectName}/_apis/release/releases/${releaseId}?api-version=${this.apiVersion}`;
     url = url.replace("dev.azure.com","vsrm.dev.azure.com")
-    return await TFSServices.getItemContent(
+    return TFSServices.getItemContent(
       url,
       this.token,
       "get",
@@ -106,7 +106,7 @@ export default class PipelinesDataProvider {
     pipelineId:string
     ){
       let url: string = `${this.orgUrl}${projectName}/_apis/pipelines/${pipelineId}/runs?api-version=${this.apiVersion}`
-      return await TFSServices.getItemContent(
+      return TFSServices.getItemContent(
         url,
         this.token,
         "get",
@@ -121,7 +121,7 @@ export default class PipelinesDataProvider {
     ){
       let url:string = `${this.orgUrl}${projectName}/_apis/release/releases?definitionId=${definitionId}api-version=${this.apiVersion}`
       url = url.replace("dev.azure.com","vsrm.dev.azure.com")
-      return await TFSServices.getItemContent(
+      return TFSServices.getItemContent(
         url,
         this.token,
         "get",
@@ -134,7 +134,7 @@ export default class PipelinesDataProvider {
       projectName:string,
     ){
       let url:string = `${this.orgUrl}${projectName}/_apis/pipelines?api-version=${this.apiVersion}`
-      return await TFSServices.getItemContent(
+      return TFSServices.getItemContent(
         url,
         this.token,
         "get",
@@ -148,7 +148,7 @@ export default class PipelinesDataProvider {
         ){
         let url:string = `${this.orgUrl}${projectName}/_apis/release/releases?api-version=${this.apiVersion}`
         url = url.replace("dev.azure.com","vsrm.dev.azure.com")
-        return await TFSServices.getItemContent(
+        return TFSServices.getItemContent(
           url,
           this.token,
           "get",
