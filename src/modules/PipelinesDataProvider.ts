@@ -92,13 +92,68 @@ export default class PipelinesDataProvider {
   ): Promise<any> {
     let url = `${this.orgUrl}${projectName}/_apis/release/releases/${releaseId}?api-version=${this.apiVersion}`;
     url = url.replace("dev.azure.com","vsrm.dev.azure.com")
-    let res = await TFSServices.getItemContent(
+    return TFSServices.getItemContent(
       url,
       this.token,
       "get",
       null,
       null
     );
-    return res;
   }
+
+  async GetPipelineRunHistory(
+    projectName:string,
+    pipelineId:string
+    ){
+      let url: string = `${this.orgUrl}${projectName}/_apis/pipelines/${pipelineId}/runs?api-version=${this.apiVersion}`
+      return TFSServices.getItemContent(
+        url,
+        this.token,
+        "get",
+        null,
+        null
+      );
+    }
+
+    async GetReleaseHistory(
+      projectName:string,
+      definitionId:string
+    ){
+      let url:string = `${this.orgUrl}${projectName}/_apis/release/releases?definitionId=${definitionId}api-version=${this.apiVersion}`
+      url = url.replace("dev.azure.com","vsrm.dev.azure.com")
+      return TFSServices.getItemContent(
+        url,
+        this.token,
+        "get",
+        null,
+        null
+      );
+    }
+
+    async GetAllPipelines(
+      projectName:string,
+    ){
+      let url:string = `${this.orgUrl}${projectName}/_apis/pipelines?api-version=${this.apiVersion}`
+      return TFSServices.getItemContent(
+        url,
+        this.token,
+        "get",
+        null,
+        null
+        );
+      }
+
+      async GetAllReleases(
+        projectName:string,
+        ){
+        let url:string = `${this.orgUrl}${projectName}/_apis/release/releases?api-version=${this.apiVersion}`
+        url = url.replace("dev.azure.com","vsrm.dev.azure.com")
+        return TFSServices.getItemContent(
+          url,
+          this.token,
+          "get",
+          null,
+          null
+        );
+      }
 }

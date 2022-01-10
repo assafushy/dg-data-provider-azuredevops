@@ -138,6 +138,15 @@ describe("git module - tests", () => {
       "2018-01-30T12:51:51Z",
       "2021-10-30T12:51:51Z"
     );
-    expect(json.count).toBe(14);
+    expect(json.count).toBeGreaterThanOrEqual(14);
   });
+  test("should return all commits for repo ", async ()=>{
+    let gitDataProvider = await dgDataProviderAzureDevOps.getGitDataProvider();
+    let json = await gitDataProvider.GetCommitsForRepo(
+      "tests",
+      "68f2aee7-0864-458e-93ce-320303a080ed"
+    );
+    expect(json.count).toBeGreaterThanOrEqual(0);
+  })
+  
 }); //describe

@@ -43,5 +43,38 @@ describe("pipeline module - tests", () => {
     );
     expect(result).toBeDefined();
   });
-});
 
+  test("should return pipeline run history ", async () => {
+    let PipelineDataProvider = await dgDataProviderAzureDevOps.getPipelinesDataProvider();
+    let json = await PipelineDataProvider.GetPipelineRunHistory(
+      "tests",
+      "14"
+    );
+    expect(json).toBeDefined();
+  })
+
+  test("should return release defenition history ", async () => {
+    let PipelineDataProvider = await dgDataProviderAzureDevOps.getPipelinesDataProvider();
+    let json = await PipelineDataProvider.GetReleaseHistory(
+      "tests",
+      "1"
+    );
+    expect(json).toBeDefined();
+  })
+
+  test("should return all pipelines ", async () => {
+    let PipelineDataProvider = await dgDataProviderAzureDevOps.getPipelinesDataProvider();
+    let json = await PipelineDataProvider.GetAllPipelines(
+      "tests"
+      );
+    expect(json).toBeDefined();
+  })
+
+  test("should return all releases ", async () => {
+    let PipelineDataProvider = await dgDataProviderAzureDevOps.getPipelinesDataProvider();
+    let json = await PipelineDataProvider.GetAllReleases(
+      "tests"
+      );
+    expect(json).toBeDefined();
+  })
+});

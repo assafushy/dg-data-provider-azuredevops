@@ -247,13 +247,27 @@ export default class GitDataProvider {
     pullRequestID: number
   ) {
     let url: string = `${this.orgUrl}${projectName}/_apis/git/repositories/${repoID}/pullRequests/${pullRequestID}/threads?api-version=${this.apiVersion}`;
-    let res: any = await TFSServices.getItemContent(
+    return TFSServices.getItemContent(
       url,
       this.token,
       "get",
       null,
       null
     );
-    return res;
   }
+
+  async GetCommitsForRepo(
+    projectName: string,
+    repoID: string
+  ){ 
+    let url: string = `${this.orgUrl}${projectName}/_apis/git/repositories/${repoID}/commits?api-version=${this.apiVersion}`
+    return TFSServices.getItemContent(
+      url,
+      this.token,
+      "get",
+      null,
+      null
+    );
+  }
+  
 }
