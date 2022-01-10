@@ -92,14 +92,13 @@ export default class PipelinesDataProvider {
   ): Promise<any> {
     let url = `${this.orgUrl}${projectName}/_apis/release/releases/${releaseId}?api-version=${this.apiVersion}`;
     url = url.replace("dev.azure.com","vsrm.dev.azure.com")
-    let res = await TFSServices.getItemContent(
+    return await TFSServices.getItemContent(
       url,
       this.token,
       "get",
       null,
       null
     );
-    return res;
   }
 
   async GetPipelineRunHistory(
@@ -107,14 +106,13 @@ export default class PipelinesDataProvider {
     pipelineId:string
     ){
       let url: string = `${this.orgUrl}${projectName}/_apis/pipelines/${pipelineId}/runs?api-version=${this.apiVersion}`
-      let res: any = await TFSServices.getItemContent(
+      return await TFSServices.getItemContent(
         url,
         this.token,
         "get",
         null,
         null
       );
-      return res
     }
 
     async GetReleaseHistory(
@@ -123,28 +121,26 @@ export default class PipelinesDataProvider {
     ){
       let url:string = `${this.orgUrl}${projectName}/_apis/release/releases?definitionId=${definitionId}api-version=${this.apiVersion}`
       url = url.replace("dev.azure.com","vsrm.dev.azure.com")
-      let res = await TFSServices.getItemContent(
+      return await TFSServices.getItemContent(
         url,
         this.token,
         "get",
         null,
         null
       );
-      return res;
     }
 
     async GetAllPipelines(
       projectName:string,
     ){
       let url:string = `${this.orgUrl}${projectName}/_apis/pipelines?api-version=${this.apiVersion}`
-      let res = await TFSServices.getItemContent(
+      return await TFSServices.getItemContent(
         url,
         this.token,
         "get",
         null,
         null
         );
-          return res;
       }
 
       async GetAllReleases(
@@ -152,13 +148,12 @@ export default class PipelinesDataProvider {
         ){
         let url:string = `${this.orgUrl}${projectName}/_apis/release/releases?api-version=${this.apiVersion}`
         url = url.replace("dev.azure.com","vsrm.dev.azure.com")
-        let res = await TFSServices.getItemContent(
+        return await TFSServices.getItemContent(
           url,
           this.token,
           "get",
           null,
           null
         );
-        return res;
       }
 }
