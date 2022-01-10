@@ -62,4 +62,19 @@ describe("pipeline module - tests", () => {
     expect(json).toBeDefined();
   })
 
+  test("should return all pipelines ", async () => {
+    let PipelineDataProvider = await dgDataProviderAzureDevOps.getPipelinesDataProvider();
+    let json = await PipelineDataProvider.GetAllPipelines(
+      "tests"
+      );
+    expect(json).toBeDefined();
+  })
+
+  test("should return all releases ", async () => {
+    let PipelineDataProvider = await dgDataProviderAzureDevOps.getPipelinesDataProvider();
+    let json = await PipelineDataProvider.GetAllReleases(
+      "tests"
+      );
+    expect(json).toBeDefined();
+  })
 });

@@ -133,8 +133,32 @@ export default class PipelinesDataProvider {
       return res;
     }
 
+    async GetAllPipelines(
+      projectName:string,
+    ){
+      let url:string = `${this.orgUrl}${projectName}/_apis/pipelines?api-version=${this.apiVersion}`
+      let res = await TFSServices.getItemContent(
+        url,
+        this.token,
+        "get",
+        null,
+        null
+        );
+          return res;
+      }
 
-
-
-
+      async GetAllReleases(
+        projectName:string,
+        ){
+        let url:string = `${this.orgUrl}${projectName}/_apis/release/releases?api-version=${this.apiVersion}`
+        url = url.replace("dev.azure.com","vsrm.dev.azure.com")
+        let res = await TFSServices.getItemContent(
+          url,
+          this.token,
+          "get",
+          null,
+          null
+        );
+        return res;
+      }
 }
