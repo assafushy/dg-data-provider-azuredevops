@@ -261,13 +261,14 @@ export default class GitDataProvider {
     repoID: string
   ){ 
     let url: string = `${this.orgUrl}${projectName}/_apis/git/repositories/${repoID}/commits?api-version=${this.apiVersion}`
-    return TFSServices.getItemContent(
+    let res:any = await TFSServices.getItemContent(
       url,
       this.token,
       "get",
       null,
       null
     );
+    return res;
   }
   
 }
