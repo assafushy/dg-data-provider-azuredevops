@@ -121,12 +121,12 @@ describe("git module - tests", () => {
     );
     expect(json.count).toBeGreaterThan(0);
   });
-  test("should return items linked in build range", async () => { //the api call doesen't work as intended
+  test("should return items linked in build range", async () => {
     let gitDataProvider = await dgDataProviderAzureDevOps.getGitDataProvider();
     let json = await gitDataProvider.GetItemsForPipelinesRange(
       "tests",
       244,
-      244
+      250
     );
     expect(json.length).toBeGreaterThan(0);
   });
