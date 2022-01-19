@@ -70,9 +70,9 @@ describe("pipeline module - tests", () => {
     expect(json).toBeDefined();
   })
 
-  test("should return all releases ", async () => {
+  test("should return all releaseDefenitions ", async () => {
     let PipelineDataProvider = await dgDataProviderAzureDevOps.getPipelinesDataProvider();
-    let json = await PipelineDataProvider.GetAllReleases(
+    let json = await PipelineDataProvider.GetAllReleaseDefenitions(
       "tests"
       );
     expect(json).toBeDefined();
