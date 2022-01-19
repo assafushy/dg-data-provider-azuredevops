@@ -146,10 +146,10 @@ export default class PipelinesDataProvider {
         return res;
       }
 
-      async GetAllReleases(
+      async GetAllReleaseDefenitions(
         projectName:string,
         ){
-        let url:string = `${this.orgUrl}${projectName}/_apis/release/releases?api-version=${this.apiVersion}`
+        let url:string = `${this.orgUrl}${projectName}/_apis/release/definitions?api-version=${this.apiVersion}`
         url = url.replace("dev.azure.com","vsrm.dev.azure.com")
         let res:any = await TFSServices.getItemContent(
           url,
