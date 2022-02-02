@@ -14,7 +14,7 @@ export default class PipelinesDataProvider {
   }
 
   async getPipelineFromPipelineId(projectName: string, buildId: number) {
-    let url = `${this.orgUrl}${projectName}/_apis/build/builds/${buildId}?api-version=${this.apiVersion}`;
+    let url = `${this.orgUrl}${projectName}/_apis/build/builds/${buildId}`;
     return TFSServices.getItemContent(url, this.token, "get");
   } //GetCommitForPipeline
 
@@ -30,7 +30,7 @@ export default class PipelinesDataProvider {
       parameters: parameter, //'{"Test":"123"}'
     };
     logger.info(JSON.stringify(data));
-    let url = `${this.orgUrl}${projectName}/_apis/build/builds?api-version=${this.apiVersion}`;
+    let url = `${this.orgUrl}${projectName}/_apis/build/builds`;
     let res = await TFSServices.postRequest(
       url,
       this.token,
@@ -51,7 +51,7 @@ export default class PipelinesDataProvider {
         `Get artifactory from project ${projectName},BuildId ${buildId} artifact name ${artifactName}`
       );
       logger.info(`Check if build ${buildId} have artifact`);
-      let url = `${this.orgUrl}${projectName}/_apis/build/builds/${buildId}/artifacts?api-version=${this.apiVersion}`;
+      let url = `${this.orgUrl}${projectName}/_apis/build/builds/${buildId}/artifacts`;
       let response = await TFSServices.getItemContent(
         url,
         this.token,
@@ -63,7 +63,7 @@ export default class PipelinesDataProvider {
         logger.info(`No artifact for build ${buildId} was published `);
         return response;
       }
-      url = `${this.orgUrl}${projectName}/_apis/build/builds/${buildId}/artifacts?artifactName=${artifactName}&api-version=${this.apiVersion}`;
+      url = `${this.orgUrl}${projectName}/_apis/build/builds/${buildId}/artifacts?artifactName=${artifactName}`;
       let res = await TFSServices.getItemContent(
         url,
         this.token,
@@ -87,13 +87,13 @@ export default class PipelinesDataProvider {
     projectName: string,
     releaseId: number
   ): Promise<any> {
-    let url = `${this.orgUrl}${projectName}/_apis/release/releases/${releaseId}?api-version=${this.apiVersion}`;
+    let url = `${this.orgUrl}${projectName}/_apis/release/releases/${releaseId}`;
     url = url.replace("dev.azure.com", "vsrm.dev.azure.com");
     return TFSServices.getItemContent(url, this.token, "get", null, null);
   }
 
   async GetPipelineRunHistory(projectName: string, pipelineId: string) {
-    let url: string = `${this.orgUrl}${projectName}/_apis/pipelines/${pipelineId}/runs?api-version=${this.apiVersion}`;
+    let url: string = `${this.orgUrl}${projectName}/_apis/pipelines/${pipelineId}/runs`;
     let res: any = await TFSServices.getItemContent(
       url,
       this.token,
