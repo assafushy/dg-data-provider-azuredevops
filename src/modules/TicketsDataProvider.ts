@@ -14,13 +14,11 @@ import logger from "../utils/logger";
 export default class TicketsDataProvider {
   orgUrl: string = "";
   token: string = "";
-  apiVersion: string = "";
   queriesList: Array<any> = new Array<any>();
 
-  constructor(orgUrl: string, token: string, apiVersion: string) {
+  constructor(orgUrl: string, token: string) {
     this.orgUrl = orgUrl;
     this.token = token;
-    this.apiVersion = apiVersion;
   }
 
   async GetWorkItem(
@@ -253,7 +251,6 @@ export default class TicketsDataProvider {
     let ticketsDataProvider = new TicketsDataProvider(
       this.orgUrl,
       this.token,
-      this.apiVersion
     );
     var queryResult: Query = new Query();
     queryResult.asOf = results.asOf;
@@ -391,7 +388,6 @@ export default class TicketsDataProvider {
     let ticketsDataProvider = new TicketsDataProvider(
       this.orgUrl,
       this.token,
-      this.apiVersion
     );
     try {
       let wi = await ticketsDataProvider.GetWorkItem(project, id);

@@ -4,12 +4,10 @@ import logger from "../utils/logger";
 export default class MangementDataProvider {
   orgUrl: string = "";
   token: string = "";
-  apiVersion: string ="";
   
-  constructor(orgUrl: string, token: string, apiVersion: string) {
+  constructor(orgUrl: string, token: string) {
     this.orgUrl = orgUrl;
     this.token = token;
-    this.apiVersion = apiVersion;
   }
 
   async GetCllectionLinkTypes() {
@@ -26,7 +24,7 @@ export default class MangementDataProvider {
 
   //get all projects 
   async GetProjects(): Promise<any> {
-    let projectUrl: string = `${this.orgUrl}_apis/projects?api-version=${this.apiVersion}`;
+    let projectUrl: string = `${this.orgUrl}_apis/projects`;
     let projects: any = await TFSServices.getItemContent(
       projectUrl,
       this.token
@@ -54,7 +52,7 @@ export default class MangementDataProvider {
   async GetProjectByID(
     projectID: string
   ): Promise<any> {
-    let projectUrl: string = `${this.orgUrl}_apis/projects/${projectID}?api-version=${this.apiVersion}`;
+    let projectUrl: string = `${this.orgUrl}_apis/projects/${projectID}`;
     let project: any = await TFSServices.getItemContent(projectUrl, this.token);
     return project;
   }

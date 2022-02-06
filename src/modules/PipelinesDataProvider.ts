@@ -5,12 +5,10 @@ import logger from "../utils/logger";
 export default class PipelinesDataProvider {
   orgUrl: string = "";
   token: string = "";
-  apiVersion: string = "";
 
-  constructor(orgUrl: string, token: string, apiVersion: string) {
+  constructor(orgUrl: string, token: string) {
     this.orgUrl = orgUrl;
     this.token = token;
-    this.apiVersion = apiVersion;
   }
 
   async getPipelineFromPipelineId(projectName: string, buildId: number) {
@@ -30,7 +28,7 @@ export default class PipelinesDataProvider {
       parameters: parameter, //'{"Test":"123"}'
     };
     logger.info(JSON.stringify(data));
-    let url = `${this.orgUrl}${projectName}/_apis/build/builds`;
+    let url = `${this.orgUrl}${projectName}/_apis/build/builds?api-version=5.0`;
     let res = await TFSServices.postRequest(
       url,
       this.token,
@@ -105,7 +103,7 @@ export default class PipelinesDataProvider {
   }
 
   async GetReleaseHistory(projectName: string, definitionId: string) {
-    let url: string = `${this.orgUrl}${projectName}/_apis/release/releases?definitionId=${definitionId}api-version=${this.apiVersion}`;
+    let url: string = `${this.orgUrl}${projectName}/_apis/release/releases?definitionId=${definitionId}`;
     url = url.replace("dev.azure.com", "vsrm.dev.azure.com");
     let res: any = await TFSServices.getItemContent(
       url,
