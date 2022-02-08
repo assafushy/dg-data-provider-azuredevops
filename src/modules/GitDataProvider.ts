@@ -182,44 +182,25 @@ export default class GitDataProvider {
     fromBuildId: number,
     toBuildId: number
   ) {
-    let workItemsInPipelines = []
     let linkedItemsArray: any = [];
-    let url;
-    let res;
-    if (fromBuildId > toBuildId){
-      let swapNum = fromBuildId;
-      fromBuildId = toBuildId;
-      toBuildId = swapNum;
-    }
-    try{
-      for (let index = fromBuildId; index <= toBuildId; index++) {
-        url = `${this.orgUrl}${projectId}/_apis/build/builds/${index}/workitems`
-        res = await TFSServices.getItemContent(url, this.token, "get");
-        if(res)
-        if (res.value[0]) {
-            res.value[0].buildId=index;
-            workItemsInPipelines.push(res.value[0])
-          }
-      }
-    }
-    catch (error){
-      console.warn(error);
-    }
+    let url = `${this.orgUrl}${projectId}/_apis/build/workitems?fromBuildId=${fromBuildId}&toBuildId=${toBuildId}`;
+    let res = await TFSServices.getItemContent(url, this.token, "get");
     logger.info(
-      `recieved ${workItemsInPipelines.length} items in build rang ${fromBuildId}-${toBuildId}`
+      `recieved ${res.count} items in build range ${fromBuildId}-${toBuildId}`
     );
     await Promise.all(
-      workItemsInPipelines.map(async (wi: any) => {
+      res.value.map(async (wi: any) => {
         let populatedItem = await this.ticketsDataProvider.GetWorkItem(
           projectId,
           wi.id
         );
-        let changeSet: any = { workItem: populatedItem, build: wi.buildId };
+        let changeSet: any = { workItem: populatedItem, build: toBuildId };
         linkedItemsArray.push(changeSet);
       })
     );
     return linkedItemsArray;
   } //GetCommitForPipeline
+
 
   async GetCommitsInDateRange(
     projectId: string,
