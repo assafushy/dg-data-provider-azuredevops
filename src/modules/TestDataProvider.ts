@@ -14,18 +14,16 @@ import logger from "../utils/logger";
 export default class TestDataProvider {
   orgUrl: string = "";
   token: string = "";
-  apiVersion: string ="";
   
-  constructor(orgUrl: string, token: string, apiVersion: string) {
+  constructor(orgUrl: string, token: string) {
     this.orgUrl = orgUrl;
     this.token = token;
-    this.apiVersion = apiVersion;
   }
 
   async GetTestSuiteByTestCase(
     testCaseId: string
   ): Promise<any> {
-    let url = `${this.orgUrl}/_apis/testplan/suites?testCaseId=${testCaseId}&api-version=${this.apiVersion}`;
+    let url = `${this.orgUrl}/_apis/testplan/suites?testCaseId=${testCaseId}`;
     let testCaseData = await TFSServices.getItemContent(url, this.token);
     return testCaseData;
   }
@@ -34,7 +32,7 @@ export default class TestDataProvider {
   async GetTestPlans(
     project: string
   ): Promise<string> {
-    let testPlanUrl: string = `${this.orgUrl}${project}/_apis/test/plans/?api-version=5.0`; //newer api versions dont work.
+    let testPlanUrl: string = `${this.orgUrl}${project}/_apis/test/plans`;
     return TFSServices.getItemContent(testPlanUrl,this.token);
   }
 
@@ -44,7 +42,7 @@ export default class TestDataProvider {
     planId: string
   ): Promise<any> {
     let testsuitesUrl: string =
-      this.orgUrl + project + "/_apis/test/Plans/" + planId + "/suites/";
+      this.orgUrl + project + "/_apis/test/Plans/" + planId + "/suites";
     try {
       let testSuites = await TFSServices.getItemContent(
         testsuitesUrl,
@@ -238,7 +236,7 @@ export default class TestDataProvider {
     testCaseId: string
   ): Promise<any> {
     let testPointUrl: string =
-    `${this.orgUrl}${project}/_apis/test/Plans/${planId}/Suites/${suiteId}/points?testCaseId=${testCaseId}&api-version=${this.apiVersion}`;
+    `${this.orgUrl}${project}/_apis/test/Plans/${planId}/Suites/${suiteId}/points?testCaseId=${testCaseId}`;
     let testPoints: any = await TFSServices.getItemContent(
       testPointUrl,
       this.token
@@ -256,7 +254,7 @@ export default class TestDataProvider {
       logger.info(
         `Create test run op test point  ${testPointId} ,test planId : ${testPlanId}`
       );
-      let Url = `${this.orgUrl}${projectName}/_apis/test/runs?api-version=${this.apiVersion}`;
+      let Url = `${this.orgUrl}${projectName}/_apis/test/runs`;
       let data = {
         name: testRunName,
         plan: {
@@ -284,7 +282,7 @@ export default class TestDataProvider {
     state: string
   ): Promise<any> {
     logger.info(`Update runId : ${runId} to state : ${state}`);
-    let Url = `${this.orgUrl}${projectName}/_apis/test/Runs/${runId}?api-version=${this.apiVersion}`;
+    let Url = `${this.orgUrl}${projectName}/_apis/test/Runs/${runId}?api-version=5.0`;
     let data = {
       state: state,
     };
@@ -305,7 +303,7 @@ export default class TestDataProvider {
   ): Promise<any> {
     let data: any;
     logger.info(`Update test case, runId : ${runId} to state : ${state}`);
-    let Url = `${this.orgUrl}${projectName}/_apis/test/Runs/${runId}/results?api-version=${this.apiVersion}`;
+    let Url = `${this.orgUrl}${projectName}/_apis/test/Runs/${runId}/results?api-version=5.0`;
     switch (state) {
       case 0:
         logger.info(`Reset test case to Active state `);
@@ -366,7 +364,7 @@ export default class TestDataProvider {
     attachmentType: string
   ): Promise<any> {
     logger.info(`Upload attachment to test run : ${runID}`);
-    let Url = `${this.orgUrl}${projectName}/_apis/test/Runs/${runID}/attachments?api-version=${this.apiVersion}`;
+    let Url = `${this.orgUrl}${projectName}/_apis/test/Runs/${runID}/attachments?api-version=5.0-preview.1`;
     let data = {
       stream: stream,
       fileName: fileName,
@@ -387,7 +385,7 @@ export default class TestDataProvider {
     projectName: string, runId: string
   ): Promise<any> {
     logger.info(`getting test run id: ${runId}`);
-    let url = `${this.orgUrl}${projectName}/_apis/test/Runs/${runId}?api-version=${this.apiVersion}`;
+    let url = `${this.orgUrl}${projectName}/_apis/test/Runs/${runId}`;
     let res = await TFSServices.getItemContent(
       url,
       this.token,
@@ -405,7 +403,7 @@ export default class TestDataProvider {
     logger.info(
       `get test points at project ${projectName} , of testCaseId : ${testCaseId}`
     );
-    let url = `${this.orgUrl}${projectName}/_apis/test/points?api-version=${this.apiVersion}`;
+    let url = `${this.orgUrl}${projectName}/_apis/test/points`;
     let data = {
       PointsFilter: {
         TestcaseIds: [testCaseId],

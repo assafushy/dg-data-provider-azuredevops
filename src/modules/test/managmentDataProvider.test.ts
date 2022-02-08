@@ -12,7 +12,7 @@ describe("Common functions module - tests", () => {
   test("should return all collecttion projects", async () => {
     let managmentDataProvider = await dgDataProviderAzureDevOps.getMangementDataProvider();
     let json = await managmentDataProvider.GetProjects();
-    expect(json.count).toBeGreaterThan(1);
+    expect(json.count).toBeGreaterThanOrEqual(1);
   });
   test("should return project by name", async () => {
     let managmentDataProvider = await dgDataProviderAzureDevOps.getMangementDataProvider();
