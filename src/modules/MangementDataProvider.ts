@@ -24,7 +24,7 @@ export default class MangementDataProvider {
 
   //get all projects 
   async GetProjects(): Promise<any> {
-    let projectUrl: string = `${this.orgUrl}_apis/projects`;
+    let projectUrl: string = `${this.orgUrl}_apis/projects?$top=1000`;
     let projects: any = await TFSServices.getItemContent(
       projectUrl,
       this.token
