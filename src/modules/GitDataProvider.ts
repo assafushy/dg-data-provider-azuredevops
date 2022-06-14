@@ -66,7 +66,7 @@ export default class GitDataProvider {
     let pullRequestsFilteredArray: any = [];
     let ChangeSetsArray: any = [];
     //get all pr's in git repo
-    let url = `${this.orgUrl}${projectId}/_apis/git/repositories/${repositoryId}/pullrequests?status=completed&includeLinks=true}`;
+    let url = `${this.orgUrl}${projectId}/_apis/git/repositories/${repositoryId}/pullrequests?status=completed&includeLinks=true&$top=2000}`;
     logger.debug(`request url: ${url}`);
     let pullRequestsArray = await TFSServices.getItemContent(
       url,
@@ -183,7 +183,7 @@ export default class GitDataProvider {
     toBuildId: number
   ) {
     let linkedItemsArray: any = [];
-    let url = `${this.orgUrl}${projectId}/_apis/build/workitems?fromBuildId=${fromBuildId}&toBuildId=${toBuildId}`;
+    let url = `${this.orgUrl}${projectId}/_apis/build/workitems?fromBuildId=${fromBuildId}&toBuildId=${toBuildId}&$top=2000`;
     let res = await TFSServices.getItemContent(url, this.token, "get");
     logger.info(
       `recieved ${res.count} items in build range ${fromBuildId}-${toBuildId}`
@@ -208,7 +208,7 @@ export default class GitDataProvider {
     fromDate: string,
     toDate: string
   ) {
-    let url = `${this.orgUrl}${projectId}/_apis/git/repositories/${repositoryId}/commits?fromDate=${fromDate}&toDate=${toDate}&searchCriteria.includeWorkItems=true`;
+    let url = `${this.orgUrl}${projectId}/_apis/git/repositories/${repositoryId}/commits?searchCriteria.fromDate=${fromDate}&searchCriteria.toDate=${toDate}&searchCriteria.includeWorkItems=true&searchCriteria.$top=2000`;
     return TFSServices.getItemContent(url, this.token, "get");
   } //GetCommitsInDateRange
 
@@ -218,7 +218,7 @@ export default class GitDataProvider {
     fromSha: string,
     toSha: string
   ) {
-    let url = `${this.orgUrl}${projectId}/_apis/git/repositories/${repositoryId}/commits?searchCriteria.fromCommitId=${fromSha}&searchCriteria.toCommitId=${toSha}&searchCriteria.includeWorkItems=true`;
+    let url = `${this.orgUrl}${projectId}/_apis/git/repositories/${repositoryId}/commits?searchCriteria.fromCommitId=${fromSha}&searchCriteria.toCommitId=${toSha}&searchCriteria.includeWorkItems=true&searchCriteria.$top=2000`;
     return TFSServices.getItemContent(url, this.token, "get");
   } //GetCommitsInCommitRange
   
@@ -258,7 +258,7 @@ export default class GitDataProvider {
     projectName: string,
     repoID: string
   ){ 
-    let url: string = `${this.orgUrl}${projectName}/_apis/git/repositories/${repoID}/commits`
+    let url: string = `${this.orgUrl}${projectName}/_apis/git/repositories/${repoID}/commits?searchCriteria.$top=2000`
     let res:any = await TFSServices.getItemContent(
       url,
       this.token,
