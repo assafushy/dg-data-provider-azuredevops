@@ -103,7 +103,7 @@ export default class PipelinesDataProvider {
   }
 
   async GetReleaseHistory(projectName: string, definitionId: string) {
-    let url: string = `${this.orgUrl}${projectName}/_apis/release/releases?definitionId=${definitionId}`;
+    let url: string = `${this.orgUrl}${projectName}/_apis/release/releases?definitionId=${definitionId}&$top=2000`;
     url = url.replace("dev.azure.com", "vsrm.dev.azure.com");
     let res: any = await TFSServices.getItemContent(
       url,
@@ -116,7 +116,7 @@ export default class PipelinesDataProvider {
   }
 
   async GetAllPipelines(projectName: string) {
-    let url: string = `${this.orgUrl}${projectName}/_apis/pipelines`;
+    let url: string = `${this.orgUrl}${projectName}/_apis/pipelines?$top=2000`;
     let res: any = await TFSServices.getItemContent(
       url,
       this.token,
@@ -128,7 +128,7 @@ export default class PipelinesDataProvider {
   }
 
   async GetAllReleaseDefenitions(projectName: string) {
-    let url: string = `${this.orgUrl}${projectName}/_apis/release/definitions`;
+    let url: string = `${this.orgUrl}${projectName}/_apis/release/definitions?$top=2000`;
     url = url.replace("dev.azure.com", "vsrm.dev.azure.com");
     let res: any = await TFSServices.getItemContent(
       url,
