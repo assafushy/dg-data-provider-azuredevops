@@ -126,7 +126,7 @@ describe("git module - tests", () => {
     let json = await gitDataProvider.GetItemsForPipelinesRange(
       "tests",
       244,
-      250
+      244
     );
     expect(json.length).toBeGreaterThan(0);
   });
@@ -135,8 +135,8 @@ describe("git module - tests", () => {
     let json = await gitDataProvider.GetCommitsInDateRange(
       "tests",
       "68f2aee7-0864-458e-93ce-320303a080ed",
-      "2018-01-30T12:51:51Z",
-      "2021-10-30T12:51:51Z"
+      "2009-11-30T12:51:51Z",
+      "2021-11-30T12:51:51Z"
     );
     expect(json.count).toBeGreaterThanOrEqual(14);
   });
@@ -148,5 +148,24 @@ describe("git module - tests", () => {
     );
     expect(json.count).toBeGreaterThanOrEqual(0);
   })
-  
+  test("should return all pullrequests for repo ", async ()=>{
+    let gitDataProvider = await dgDataProviderAzureDevOps.getGitDataProvider();
+    let json = await gitDataProvider.GetPullRequestsForRepo(
+      "tests",
+      "68f2aee7-0864-458e-93ce-320303a080ed"
+    );
+    expect(json.count).toBeGreaterThanOrEqual(0);
+  })
+
+  test("should return all pullrequests for repo with Given PrId ", async ()=>{
+    let gitDataProvider = await dgDataProviderAzureDevOps.getGitDataProvider();
+    let json = await gitDataProvider.GetPullRequestsByIDs(
+      "tests",
+      "68f2aee7-0864-458e-93ce-320303a080ed",
+      [73,74,75]
+      );
+    expect(json.count).toBeGreaterThanOrEqual(0);
+  })
+
+
 }); //describe
