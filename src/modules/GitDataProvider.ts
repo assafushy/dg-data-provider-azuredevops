@@ -268,5 +268,55 @@ export default class GitDataProvider {
     );
     return res;
   }
+
+  async GetPullRequestsForRepo(
+    projectName: string,
+    repoID: string
+  ){
+    let url: string = 
+    `${this.orgUrl}${projectName}/_apis/git/repositories/${repoID}/pullrequests?status=completed&includeLinks=true&$top=2000}`;
+
+    let res:any = await TFSServices.getItemContent(
+      url,
+      this.token,
+      "get",
+      null,
+      null
+    );
+    return res;
+  }
+
+  
+  async GetPullRequestsByIDs(
+    projectId: string,
+    repositoryId: string,
+    pullRequestIDs: any
+  ) {
+    let pullRequestsFilteredArray: any = [];
+    let ChangeSetsArray: any = [];
+    //get all pr's in git repo
+    let url = `${this.orgUrl}${projectId}/_apis/git/repositories/${repositoryId}/pullrequests?status=completed&includeLinks=true&$top=2000}`;
+    logger.debug(`request url: ${url}`);
+    let pullRequestsArray = await TFSServices.getItemContent(
+      url,
+      this.token,
+      "get"
+    );
+    logger.info(
+      `got ${pullRequestsArray.count} pullrequests for repo: ${repositoryId}`
+    );
+    //iterate commit list to filter relavant pullrequests
+    pullRequestsArray.value.forEach((pr: any) => {
+      pullRequestIDs.forEach((prId: any) => {
+        if (prId == pr.pullRequestId) {
+          pullRequestsFilteredArray.push(pr);
+        }
+      });
+    });
+    logger.info(
+      `filtered in prId range ${pullRequestsFilteredArray.length} pullrequests for repo: ${repositoryId}`
+    );
+    return pullRequestsFilteredArray;
+  }
   
 }
