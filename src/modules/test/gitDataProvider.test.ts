@@ -159,10 +159,10 @@ describe("git module - tests", () => {
 
   test("should return all pullrequests for repo with Given PrId ", async ()=>{
     let gitDataProvider = await dgDataProviderAzureDevOps.getGitDataProvider();
-    let json = await gitDataProvider.GetPullRequestsByIDs(
+    let json = await gitDataProvider.GetItemsInPullRequestRange(
       "tests",
       "68f2aee7-0864-458e-93ce-320303a080ed",
-      [73,74,75]
+      [73,74]
       );
     expect(json.count).toBeGreaterThanOrEqual(0);
   })
