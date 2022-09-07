@@ -287,10 +287,10 @@ export default class GitDataProvider {
   }
 
   
-  async GetPullRequestsByIDs(
+  async GetItemsInPullRequestRange(
     projectId: string,
     repositoryId: string,
-    pullRequestIDs: any
+    pullRequestIDs: any,
   ) {
     let pullRequestsFilteredArray: any = [];
     let ChangeSetsArray: any = [];
@@ -315,8 +315,42 @@ export default class GitDataProvider {
     });
     logger.info(
       `filtered in prId range ${pullRequestsFilteredArray.length} pullrequests for repo: ${repositoryId}`
+      );
+    //extract linked items and append them to result
+    await Promise.all(
+      pullRequestsFilteredArray.map(async (pr: any) => {
+        let linkedItems: any = {};
+        try {
+          if (pr._links.workItems.href) {
+            //get workitems linked to pr
+            let url: string = pr._links.workItems.href;
+            linkedItems = await TFSServices.getItemContent(
+              url,
+              this.token,
+              "get"
+            );
+            logger.info(
+              `got ${linkedItems.count} items linked to pr ${pr.pullRequestId}`
+            );
+            await Promise.all(
+              linkedItems.value.map(async (item: any) => {
+                let populatedItem = await this.ticketsDataProvider.GetWorkItem(
+                  projectId,
+                  item.id
+                );
+                let changeSet: any = {
+                  workItem: populatedItem,
+                  pullrequest: pr,
+                };
+                ChangeSetsArray.push(changeSet);
+              })
+            );
+          }
+        } catch (error) {
+          logger.error(error);
+        }
+      })
     );
-    return pullRequestsFilteredArray;
+    return ChangeSetsArray;
   }
-  
 }
