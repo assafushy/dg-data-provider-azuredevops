@@ -93,8 +93,8 @@ describe("git module - tests", () => {
     let commitRange = await gitDataProvider.GetCommitsInDateRange(
       "tests",
       "68f2aee7-0864-458e-93ce-320303a080ed",
-      "2018-10-21T12:51:51Z",
-      "2021-10-24T12:51:51Z",
+      "2016-10-21T12:51:51Z",
+      "2022-10-24T12:51:51Z",
     );
     let items = await gitDataProvider.GetItemsInCommitRange(
       "tests",

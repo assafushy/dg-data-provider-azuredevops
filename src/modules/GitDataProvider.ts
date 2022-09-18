@@ -156,6 +156,16 @@ export default class GitDataProvider {
     //merge commit links with pr links
     logger.info(`got ${pullRequestsChangesArray.length} items from pr's and`);
     res = [...commitChangesArray, ...pullRequestsChangesArray];
+    let workItemIds :any = []
+    for (let index = 0; index < res.length; index++) {
+      if (workItemIds.includes(res[index].workItem.id)){
+        res.splice(index, 1); 
+        index--;
+      }
+      else{
+        workItemIds.push(res[index].workItem.id)
+      }
+    }
     return res;
   } //GetItemsInCommitRange
 
