@@ -145,6 +145,7 @@ export default class TestDataProvider {
     let testCasesUrlList: Array<any> = new Array<any>();
     //let tesrCase:TestCase;
     for (let i = 0; i < testCases.count; i++) {
+      try{
       let test: any = await TFSServices.getItemContent(
         testCases.value[i].testCase.url,
         this.token
@@ -163,9 +164,12 @@ export default class TestDataProvider {
         );
         testCase.steps = steps;
       }
-
       testCasesUrlList.push(testCase);
     }
+    catch{
+      logger.error(`ran into an issue while retriving testCase ${testCases.value[i].testCase.id}`);
+    }
+  }
 
     return testCasesUrlList;
   }
