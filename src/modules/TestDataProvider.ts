@@ -190,10 +190,7 @@ export default class TestDataProvider {
             if (result.steps.step[i].parameterizedString[0]._ != null)
               step.action = result.steps.step[
                 i
-              ].parameterizedString[0]._.replace(/<BR ?\/?>/g, "\n").replace(
-                /<[^>]*>?/gm,
-                ""
-              );
+              ].parameterizedString[0]._
           } catch (e) {
             logger.warn(`No test step action data to parse for testcase `);
           }
@@ -201,7 +198,7 @@ export default class TestDataProvider {
             if (result.steps.step[i].parameterizedString[1]._ != null)
               step.expected = result.steps.step[
                 i
-              ].parameterizedString[1]._.replace(/<[^>]*>?/gm, "");
+              ].parameterizedString[1]._
           } catch (e) {
             logger.warn(`No test step expected data to parse for testcase `);
           }
