@@ -95,6 +95,7 @@ describe("git module - tests", () => {
       "68f2aee7-0864-458e-93ce-320303a080ed",
       "2016-10-21T12:51:51Z",
       "2022-10-24T12:51:51Z",
+      "master"
     );
     let items = await gitDataProvider.GetItemsInCommitRange(
       "tests",
@@ -143,8 +144,9 @@ describe("git module - tests", () => {
   test("should return all commits for repo ", async ()=>{
     let gitDataProvider = await dgDataProviderAzureDevOps.getGitDataProvider();
     let json = await gitDataProvider.GetCommitsForRepo(
-      "tests",
-      "68f2aee7-0864-458e-93ce-320303a080ed"
+      "tests",  
+      "68f2aee7-0864-458e-93ce-320303a080ed",
+      "master"
     );
     expect(json.count).toBeGreaterThanOrEqual(0);
   })
@@ -167,5 +169,13 @@ describe("git module - tests", () => {
     expect(json.count).toBeGreaterThanOrEqual(0);
   })
 
+  test("should return branches of repository ", async ()=>{
+    let gitDataProvider = await dgDataProviderAzureDevOps.getGitDataProvider();
+    let json = await gitDataProvider.GetRepoBranches(
+      "tests",
+      "68f2aee7-0864-458e-93ce-320303a080ed",
+      );
+    expect(json.count).toBeGreaterThanOrEqual(0);
+  })
 
 }); //describe

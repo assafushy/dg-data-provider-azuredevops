@@ -216,9 +216,16 @@ export default class GitDataProvider {
     projectId: string,
     repositoryId: string,
     fromDate: string,
-    toDate: string
+    toDate: string,
+    branchName?: string
   ) {
-    let url = `${this.orgUrl}${projectId}/_apis/git/repositories/${repositoryId}/commits?searchCriteria.fromDate=${fromDate}&searchCriteria.toDate=${toDate}&searchCriteria.includeWorkItems=true&searchCriteria.$top=2000`;
+    let url:string 
+    if (typeof branchName !== 'undefined') {
+      url = `${this.orgUrl}${projectId}/_apis/git/repositories/${repositoryId}/commits?searchCriteria.fromDate=${fromDate}&searchCriteria.toDate=${toDate}&searchCriteria.includeWorkItems=true&searchCriteria.$top=2000&searchCriteria.itemVersion.version=${branchName}`;
+    }
+    else{
+      url = `${this.orgUrl}${projectId}/_apis/git/repositories/${repositoryId}/commits?searchCriteria.fromDate=${fromDate}&searchCriteria.toDate=${toDate}&searchCriteria.includeWorkItems=true&searchCriteria.$top=2000`;
+    }
     return TFSServices.getItemContent(url, this.token, "get");
   } //GetCommitsInDateRange
 
@@ -230,7 +237,7 @@ export default class GitDataProvider {
   ) {
     let url = `${this.orgUrl}${projectId}/_apis/git/repositories/${repositoryId}/commits?searchCriteria.fromCommitId=${fromSha}&searchCriteria.toCommitId=${toSha}&searchCriteria.includeWorkItems=true&searchCriteria.$top=2000`;
     return TFSServices.getItemContent(url, this.token, "get");
-  } //GetCommitsInCommitRange
+  } //GetCommitsInCommitRange doesen't work!!!
   
   async CreatePullRequestComment(
     projectName: string,
@@ -266,17 +273,24 @@ export default class GitDataProvider {
 
   async GetCommitsForRepo(
     projectName: string,
-    repoID: string
+    repoID: string,
+    branchName?: string
   ){ 
-    let url: string = `${this.orgUrl}${projectName}/_apis/git/repositories/${repoID}/commits?searchCriteria.$top=2000`
-    let res:any = await TFSServices.getItemContent(
-      url,
-      this.token,
-      "get",
-      null,
-      null
-    );
-    return res;
+    let url: string
+    if (typeof branchName !== 'undefined') {
+      url = `${this.orgUrl}${projectName}/_apis/git/repositories/${repoID}/commits?searchCriteria.$top=2000&searchCriteria.itemVersion.version=${branchName}`
+    }
+    else{
+       url = `${this.orgUrl}${projectName}/_apis/git/repositories/${repoID}/commits?searchCriteria.$top=2000`
+    }
+      let res:any = await TFSServices.getItemContent(
+        url,
+        this.token,
+        "get",
+        null,
+        null
+        );
+        return res;
   }
 
   async GetPullRequestsForRepo(
@@ -362,5 +376,20 @@ export default class GitDataProvider {
       })
     );
     return ChangeSetsArray;
+  }
+
+  async GetRepoBranches(
+    projectName: string,
+    repoID: string
+    ){
+      let url: string = `${this.orgUrl}${projectName}/_apis/git/repositories/${repoID}/refs?searchCriteria.$top=2000`
+        let res:any = await TFSServices.getItemContent(
+          url,
+          this.token,
+          "get",
+          null,
+          null
+          );
+          return res;
   }
 }
