@@ -382,7 +382,7 @@ export default class GitDataProvider {
     projectName: string,
     repoID: string
     ){
-      let url: string = `${this.orgUrl}${projectName}/_apis/git/repositories/${repoID}/refs?searchCriteria.$top=2000`
+      let url: string = `${this.orgUrl}${projectName}/_apis/git/repositories/${repoID}/refs?searchCriteria.$top=1000&filter=heads`
         let res:any = await TFSServices.getItemContent(
           url,
           this.token,
