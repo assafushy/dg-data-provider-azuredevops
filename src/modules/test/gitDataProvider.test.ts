@@ -2,9 +2,9 @@ import DgDataProviderAzureDevOps from "../..";
 
 require("dotenv").config();
 jest.setTimeout(60000);
-
 const orgUrl = process.env.ORG_URL;
 const token = process.env.PAT;
+
 const dgDataProviderAzureDevOps = new DgDataProviderAzureDevOps(orgUrl,token);
 
 
@@ -91,15 +91,15 @@ describe("git module - tests", () => {
   test("should return commits with linked items in date range", async () => {
     let gitDataProvider = await dgDataProviderAzureDevOps.getGitDataProvider();
     let commitRange = await gitDataProvider.GetCommitsInDateRange(
-      "tests",
-      "68f2aee7-0864-458e-93ce-320303a080ed",
+      "Azuretraining",
+      "b77bccb5-38de-4dca-9dcb-b0f8046bc045",
       "2016-10-21T12:51:51Z",
-      "2022-10-24T12:51:51Z",
-      "master"
+      "2024-10-24T12:51:51Z",
+      "main"
     );
     let items = await gitDataProvider.GetItemsInCommitRange(
-      "tests",
-      "68f2aee7-0864-458e-93ce-320303a080ed",
+      "Azuretraining",
+      "b77bccb5-38de-4dca-9dcb-b0f8046bc045",
       commitRange
     );
     expect(items[0].workItem).toBeDefined();
@@ -179,3 +179,29 @@ describe("git module - tests", () => {
   })
 
 }); //describe
+
+test("should return pull requests in commit range without linked items", async () => {
+  let gitDataProvider = await dgDataProviderAzureDevOps.getGitDataProvider();
+
+  // Get the commit range using the date range
+  let commitRange = await gitDataProvider.GetCommitsInDateRange(
+    "Azuretraining",
+    "b77bccb5-38de-4dca-9dcb-b0f8046bc045",
+    "2023-7-21T12:51:51Z",
+    "2024-8-21T12:51:51Z",
+    "main"
+  );
+
+  // Use the new function to get pull requests without linked items
+  let pullRequests = await gitDataProvider.GetPullRequestsInCommitRangeWithoutLinkedItems(
+    "Azuretraining",
+    "b77bccb5-38de-4dca-9dcb-b0f8046bc045",
+    commitRange
+  );
+
+  // Print the pull requests
+  console.log("Pull Requests:", pullRequests);
+
+  expect(pullRequests).toBeDefined();
+  expect(pullRequests.length).toBeGreaterThan(0);
+});

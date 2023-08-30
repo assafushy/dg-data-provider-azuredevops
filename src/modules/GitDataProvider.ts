@@ -169,6 +169,57 @@ export default class GitDataProvider {
     return res;
   } //GetItemsInCommitRange
 
+  async GetPullRequestsInCommitRangeWithoutLinkedItems(
+    projectId: string,
+    repositoryId: string,
+    commitRangeArray: any
+  ) {
+    let pullRequestsFilteredArray: any[] = [];
+  
+    // Extract the organization name from orgUrl
+    let orgName = this.orgUrl.split('/').filter(Boolean).pop();
+  
+    // Get all PRs in the git repo
+    let url = `${this.orgUrl}${projectId}/_apis/git/repositories/${repositoryId}/pullrequests?status=completed&includeLinks=true&$top=2000}`;
+    logger.debug(`request url: ${url}`);
+    let pullRequestsArray = await TFSServices.getItemContent(
+      url,
+      this.token,
+      "get"
+    );
+    logger.info(
+      `got ${pullRequestsArray.count} pullrequests for repo: ${repositoryId}`
+    );
+  
+    // Iterate commit list to filter relevant pull requests
+    pullRequestsArray.value.forEach((pr: any) => {
+      commitRangeArray.value.forEach((commit: any) => {
+        if (pr.lastMergeCommit.commitId == commit.commitId) {
+          // Construct the pull request URL
+          const prUrl = `https://dev.azure.com/${orgName}/${projectId}/_git/${repositoryId}/pullrequest/${pr.pullRequestId}`;
+  
+          // Extract only the desired properties from the PR
+          const prFilteredData = {
+            pullRequestId: pr.pullRequestId,
+            createdBy: pr.createdBy.displayName,
+            creationDate: pr.creationDate,
+            closedDate: pr.closedDate,
+            title: pr.title,
+            description: pr.description,
+            url: prUrl  // Use the constructed URL here
+          };
+          pullRequestsFilteredArray.push(prFilteredData);
+        }
+      });
+    });
+    logger.info(
+      `filtered in commit range ${pullRequestsFilteredArray.length} pullrequests for repo: ${repositoryId}`
+    );
+  
+    return pullRequestsFilteredArray;
+  } // GetPullRequestsInCommitRangeWithoutLinkedItems
+  
+
   async GetCommitByCommitId(
     projectId: string,
     repositoryId: string,
