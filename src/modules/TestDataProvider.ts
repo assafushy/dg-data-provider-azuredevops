@@ -91,6 +91,7 @@ export default class TestDataProvider {
     let testSuites = await this.GetTestSuitesForPlan(project, planId);
     // GetTestSuites(project, planId);
     Helper.suitList = [];
+    Helper.level = 1;
     let dataSuites: any = Helper.findSuitesRecursive(
       planId,
       this.orgUrl,
