@@ -84,10 +84,10 @@ export class Helper {
               suits[i].title,
               suits[i].id,
               foundId,
-              this.level++
+              this.level
             );
             suit.url = url + project + "/_workitems/edit/" + suits[i].id;
-            this.suitList.push(suit);
+            //this.suitList.push(suit);
             Helper.first = false;
             if (recursive == false) {
               return this.suitList;
