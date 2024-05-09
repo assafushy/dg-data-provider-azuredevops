@@ -123,14 +123,27 @@ export interface RootObject {
   pullRequestThreadContext: PullRequestThreadContext;
 }
 export class TestCase {
-  id:String;
-  title:String;
-  description:String;
-  area: String;
+  id: string;
+  title: string;
+  description: string;
+  area: string;
   steps: TestSteps[];
   suit: string;
-  url:string;
+  url: string;
+  relations: Relation[];
+
+  constructor() {
+    this.relations = []; // Initialize relations as an empty array
+  }
 }
+
+// Define a separate type for clarity and reusability
+export type Relation = {
+  id: string;
+  title: string;
+  customerId?: string;
+}
+
 export class TestSteps {
   action: String;
   expected: String;
