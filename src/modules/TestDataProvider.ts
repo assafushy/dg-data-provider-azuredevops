@@ -162,8 +162,7 @@ export default class TestDataProvider {
 
       testCase.title = test.fields["System.Title"];
       testCase.area = test.fields["System.AreaPath"];
-      testCase.description = test.fields["System.LinkTypes.Related"];
-
+      testCase.description = test.fields["System.Description"];
       testCase.url = url + test.id;
       //testCase.steps = test.fields["Microsoft.VSTS.TCM.Steps"];
       testCase.id = test.id;
