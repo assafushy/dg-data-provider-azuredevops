@@ -133,7 +133,7 @@ export class TestCase {
   relations: Relation[];
 
   constructor() {
-    this.relations = []; // Initialize relations as an empty array
+    this.relations = [];
   }
 }
 
