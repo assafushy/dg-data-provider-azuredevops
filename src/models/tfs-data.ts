@@ -137,7 +137,6 @@ export class TestCase {
   }
 }
 
-// Define a separate type for clarity and reusability
 export type Relation = {
   id: string;
   title: string;
