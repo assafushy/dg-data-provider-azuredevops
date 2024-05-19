@@ -17,7 +17,7 @@ jobs:
           fetch-depth: 0  # Fetch all history for all branches and tags
 
       - name: Pull latest changes
-        run: git pull origin main
+        run: git pull origin fix-action
 
       - name: 🟢 node
         uses: actions/setup-node@v2
