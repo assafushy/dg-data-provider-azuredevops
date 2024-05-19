@@ -1,6 +1,6 @@
 {
   "name": "morrispack",
-  "version": "0.5.10",
+  "version": "0.5.11",
   "description": "A document generator data provider, aimed to retrive data from azure devops",
   "repository": {
     "type": "git",
