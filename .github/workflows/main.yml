@@ -26,7 +26,7 @@ jobs:
           registry-url: https://registry.npmjs.org
 
       - name: Set up .npmrc
-        run: echo "//registry.npmjs.org/:_authToken=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" > ~/.npmrc
+        run: echo "//registry.npmjs.org/:_authToken=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" > ~/.npmrc
 
       - run: npm install
       - run: npm run build
@@ -41,4 +41,4 @@ jobs:
       - name: 🚀 publish
         run: npm publish --access public --registry https://registry.npmjs.org
         env:
-          NODE_AUTH_TOKEN: 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
+          NODE_AUTH_TOKEN: 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
