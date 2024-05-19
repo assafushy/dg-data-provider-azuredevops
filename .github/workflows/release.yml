@@ -12,6 +12,10 @@ jobs:
     steps:
       - name: 📚 checkout
         uses: actions/checkout@v2
+        
+      - name: Pull latest changes
+        run: git pull origin main
+        
       - name: 🟢 node
         uses: actions/setup-node@v2
         with:
