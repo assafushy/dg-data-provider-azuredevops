@@ -41,4 +41,4 @@ jobs:
       - name: 🚀 publish
         run: npm publish --access public --registry https://registry.npmjs.org
         env:
-          NODE_AUTH_TOKEN: ${{ secrets.NPM_AUTH_TOKEN }}
+          NODE_AUTH_TOKEN: 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
