@@ -3,7 +3,7 @@ name: "publish fix"
 on:
   push:
     branches:
-      - main
+      - fix-action
   workflow_dispatch:
 
 jobs:
