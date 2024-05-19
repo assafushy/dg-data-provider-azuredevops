@@ -1,6 +1,6 @@
 {
   "name": "@doc-gen/dg-data-provider-azuredevops",
-  "version": "0.4.4",
+  "version": "0.5.0",
   "description": "A document generator data provider, aimed to retrive data from azure devops",
   "repository": {
     "type": "git",
