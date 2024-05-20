@@ -6,10 +6,15 @@ on:
       - fix-action
   workflow_dispatch:
 
+permissions:
+  contents: read
+  packages: write
+
 jobs:
   release:
     name: 🚀 publish
     runs-on: ubuntu-latest
+
     steps:
       - name: 📚 checkout
         uses: actions/checkout@v2
@@ -30,12 +35,13 @@ jobs:
           
       - run: npm install
       - run: npm run build
-      - name:  'Automated Version Bump'
-        uses:  'phips28/gh-action-bump-version@master'
+
+      - name: Automated Version Bump
+        uses: phips28/gh-action-bump-version@master
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
           commit-message: 'CI: bumps version to {{version}} [skip ci]'
+
       - name: 🚀 publish
         run: npm publish --access public
-
