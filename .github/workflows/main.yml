@@ -36,13 +36,7 @@ jobs:
       - run: npm install
       - run: npm run build
 
-      - name: Automated Version Bump
-        uses: phips28/gh-action-bump-version@master
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        with:
-          commit-message: 'CI: bumps version to {{version}} [skip ci]'
-
+ 
       - name: 🚀 publish
         run: npm publish --access public
         env:
